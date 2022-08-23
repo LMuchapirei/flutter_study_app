@@ -22,13 +22,16 @@ class AppIntroductionScreen extends StatelessWidget {
               const Icon(
                 Icons.star,
                 size: 65,
-                color: Colors.amber,
               ),
               SizedBox(
                 height: 40,
               ),
               const Text(
-                  'This is a study app. You can use it as you want. If you understand how this works you will be able to scale it.With this you will master firebase backend and flutter frontend.'),
+                  'This is a study app. You can use it as you want. If you understand how this works you will be able to scale it.With this you will master firebase backend and flutter frontend.',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: onSurfaceTextColor,
+                      fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 40,
               ),
