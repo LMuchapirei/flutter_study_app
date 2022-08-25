@@ -28,6 +28,7 @@ class AppIntroductionScreen extends StatelessWidget {
               ),
               const Text(
                   'This is a study app. You can use it as you want. If you understand how this works you will be able to scale it.With this you will master firebase backend and flutter frontend.',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 18,
                       color: onSurfaceTextColor,
@@ -36,7 +37,10 @@ class AppIntroductionScreen extends StatelessWidget {
                 height: 40,
               ),
               AppCircleButton(
-                opTap: () => null,
+                opTap: () {
+                  print("Clicked ");
+                  Get.toNamed("/home");
+                },
                 child: const Icon(Icons.arrow_forward),
               )
             ],
