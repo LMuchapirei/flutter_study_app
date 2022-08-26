@@ -38,8 +38,7 @@ class AppIntroductionScreen extends StatelessWidget {
               ),
               AppCircleButton(
                 opTap: () {
-                  print("Clicked ");
-                  Get.toNamed("/home");
+                  Get.offAndToNamed("/home");
                 },
                 child: const Icon(Icons.arrow_forward),
               )

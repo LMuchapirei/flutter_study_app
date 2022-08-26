@@ -22,8 +22,9 @@ import 'configs/themes/app_dark_theme.dart';
 //   ));
 // }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   InitialBindings().dependencies();
   runApp(MyApp());
 }

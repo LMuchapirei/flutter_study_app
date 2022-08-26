@@ -13,7 +13,8 @@ class QuestionPaperController extends GetxController {
     List<String> imgNames = ["biology", "chemistry", "maths", "physics"];
     for (var img in imgNames) {
       final imgUrl = await Get.find<FirebaseStorageService>().getImage(img);
-      print(imgUrl);
+      print(img);
+      print("Image url $imgUrl");
       if (imgUrl != null) allPaperImages.add(imgUrl);
     }
     try {} catch (e) {

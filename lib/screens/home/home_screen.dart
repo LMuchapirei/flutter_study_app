@@ -9,14 +9,15 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     QuestionPaperController _questionPaperController = Get.find();
     return Scaffold(
-      body: ListView.separated(
+      body: Obx(() => ListView.separated(
           itemBuilder: (BuildContext context, index) {
             return ClipRRect(
               child: SizedBox(
                 height: 200,
                 width: 200,
                 child: FadeInImage(
-                    placeholder: AssetImage("assets/images/app_splash_log.png"),
+                    placeholder:
+                        AssetImage("assets/images/app_splash_logo.png"),
                     image: NetworkImage(
                         _questionPaperController.allPaperImages[index])),
               ),
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               height: 20,
             );
           },
-          itemCount: _questionPaperController.allPaperImages.length),
+          itemCount: _questionPaperController.allPaperImages.length)),
     );
   }
 }
