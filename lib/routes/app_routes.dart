@@ -3,6 +3,7 @@ import 'package:flutter_study_app/controllers/question_paper/question_paper_cont
 import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/screens/introduction/introduction.dart';
 
+import '../controllers/zoom_drawer_controller.dart';
 import '../screens/splash/splash_screen.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +17,7 @@ class AppRoutes {
             page: () => const HomeScreen(),
             binding: BindingsBuilder(() {
               Get.put(QuestionPaperController());
+              Get.put(MyZoomDrawerController());
             }))
       ];
 }
