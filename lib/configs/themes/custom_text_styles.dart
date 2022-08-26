@@ -7,3 +7,4 @@ TextStyle cardTitles(context) => TextStyle(
         : Theme.of(context).primaryColor,
     fontSize: 18,
     fontWeight: FontWeight.bold);
+const detailTextStyle = TextStyle(fontSize: 12);
