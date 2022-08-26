@@ -39,6 +39,10 @@ dependencies:
   google_fonts: ^3.0.1
   firebase_storage: ^10.3.6
   cached_network_image: ^3.2.0
+  flutter_zoom_drawer: ^2.0.2
+  firebase_auth: 
+  url_launcher: ^6.0.18
+  google_sign_in: ^5.4.0
 
 dev_dependencies:
   flutter_test:

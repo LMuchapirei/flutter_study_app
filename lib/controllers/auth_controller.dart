@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_study_app/firebase_ref/references.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../widgets/dialogs/dialog_widget.dart';
 
 class AuthController extends GetxController {
   @override
@@ -51,5 +54,16 @@ class AuthController extends GetxController {
       "name": account.displayName,
       "profilepic": account.photoUrl
     });
+  }
+
+  void showLoginAlertDialog() {
+    Get.dialog(Dialogs.questionStartDialog(onTap: (() {
+      Get.back();
+      // NavigateToLogin Page
+    })), barrierDismissible: false);
+  }
+
+  bool isLoggedIn() {
+    return _auth.currentUser != null;
   }
 }
