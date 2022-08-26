@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/controllers/question_paper/question_paper_controller.dart';
+import 'package:flutter_study_app/screens/home/question_card.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,17 +13,10 @@ class HomeScreen extends StatelessWidget {
     QuestionPaperController _questionPaperController = Get.find();
     return Scaffold(
       body: Obx(() => ListView.separated(
+          padding: UIParameters.mobileScreenPadding,
           itemBuilder: (BuildContext context, index) {
-            return ClipRRect(
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: FadeInImage(
-                    placeholder:
-                        AssetImage("assets/images/app_splash_logo.png"),
-                    image: NetworkImage(
-                        _questionPaperController.allPaperImages[index])),
-              ),
+            return QuestionCard(
+              model: _questionPaperController.allPapers[index],
             );
           },
           separatorBuilder: (BuildContext context, index) {
@@ -28,7 +24,7 @@ class HomeScreen extends StatelessWidget {
               height: 20,
             );
           },
-          itemCount: _questionPaperController.allPaperImages.length)),
+          itemCount: _questionPaperController.allPapers.length)),
     );
   }
 }

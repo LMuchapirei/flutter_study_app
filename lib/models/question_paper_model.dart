@@ -1,4 +1,6 @@
-// ignore_for_file: unnecessary_this
+// ignore_for_file:
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionPaperModel {
   String id;
@@ -7,24 +9,35 @@ class QuestionPaperModel {
   String description;
   int timeSeconds;
   List<Questions>? questions;
-
+  int questionCOunt;
   QuestionPaperModel(
       {required this.id,
       required this.title,
       this.imageUrl,
       required this.description,
       required this.timeSeconds,
+      required this.questionCOunt,
       this.questions});
 
   QuestionPaperModel.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         title = json['title'] as String,
         imageUrl = json['image_url'] as String,
-        description = json['Description'],
+        description = json['description'],
         timeSeconds = json['time_seconds'],
+        questionCOunt = 0,
         questions = (json['questions'] as List)
             .map((dynamic e) => Questions.fromJson(e as Map<String, dynamic>))
             .toList();
+
+  QuestionPaperModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> json)
+      : id = json.id,
+        title = json['title'],
+        imageUrl = json['image_url'],
+        description = json['description'],
+        timeSeconds = json['time_seconds'],
+        questionCOunt = json['questions_count'] as int,
+        questions = [];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
