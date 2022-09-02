@@ -29,11 +29,87 @@ class MenuScreen extends GetView<MyZoomDrawerController> {
                     controller.toggleDrawer();
                   },
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.3),
+                child: Column(
+                  children: [
+                    Obx(
+                      () => controller.user.value == null
+                          ? const SizedBox()
+                          : Text(
+                              controller.user.value!.displayName ?? '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 18,
+                                  color: onSurfaceTextColor),
+                            ),
+                    ),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    _DrawerButton(
+                        icon: Icons.web,
+                        label: "WebSite",
+                        onPressed: () {
+                          controller.webSite();
+                        }),
+                    _DrawerButton(
+                        icon: Icons.facebook,
+                        label: "Facebook",
+                        onPressed: () {
+                          controller.facebook();
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0),
+                      child: _DrawerButton(
+                          icon: Icons.email,
+                          label: "Email",
+                          onPressed: () {
+                            controller.email();
+                          }),
+                    ),
+                    Spacer(
+                      flex: 4,
+                    ),
+                    _DrawerButton(
+                        icon: Icons.logout,
+                        label: "Logout",
+                        onPressed: () {
+                          controller.logout();
+                        })
+                  ],
+                ),
               )
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DrawerButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+  const _DrawerButton(
+      {Key? key,
+      required this.icon,
+      required this.label,
+      required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      icon: Icon(
+        icon,
+        size: 15,
+      ),
+      onPressed: onPressed,
+      label: Text(label),
     );
   }
 }

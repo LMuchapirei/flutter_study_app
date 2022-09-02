@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 
 class HomeScreen extends GetView<MyZoomDrawerController> {
   const HomeScreen({Key? key}) : super(key: key);
-
+  static String routeName = "/home";
   @override
   Widget build(BuildContext context) {
     QuizPaperController _questionPaperController = Get.find();

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/firebase_ref/references.dart';
+import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/screens/login/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -38,6 +39,7 @@ class AuthController extends GetxController {
             accessToken: _authAccount.accessToken);
         await _auth.signInWithCredential(_credential);
         await saveUser(account);
+        navigateToHomePage();
       }
     } on Exception catch (error) {
       print("$error");
@@ -70,5 +72,25 @@ class AuthController extends GetxController {
 
   void navigateToLoginPage() {
     Get.toNamed(LoginScreen.routeName);
+  }
+
+  User? getUser() {
+    _user.value = _auth.currentUser;
+    return _user.value;
+  }
+
+  Future<void> signOut() async {
+    // AppLogger.d('Sign out');
+    try {
+      await _auth.signOut();
+      navigateToHomePage();
+    } on FirebaseAuthException catch (e) {
+      // AppLogger.e('Signout falied');
+
+    }
+  }
+
+  void navigateToHomePage() {
+    Get.offAllNamed(HomeScreen.routeName);
   }
 }

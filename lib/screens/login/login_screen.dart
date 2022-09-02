@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
+import 'package:flutter_study_app/controllers/auth_controller.dart';
 import 'package:flutter_study_app/widgets/common/main_button.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetView<AuthController> {
   const LoginScreen({Key? key}) : super(key: key);
   static const String routeName = "/login";
   @override
@@ -31,7 +33,9 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             MainButton(
-              onTap: () {},
+              onTap: () {
+                controller.signInWithGoogle();
+              },
               child: Stack(
                 children: [
                   Positioned(
