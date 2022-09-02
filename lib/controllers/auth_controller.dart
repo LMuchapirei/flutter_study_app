@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/firebase_ref/references.dart';
+import 'package:flutter_study_app/screens/login/login_screen.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -59,11 +60,15 @@ class AuthController extends GetxController {
   void showLoginAlertDialog() {
     Get.dialog(Dialogs.questionStartDialog(onTap: (() {
       Get.back();
-      // NavigateToLogin Page
+      navigateToLoginPage();
     })), barrierDismissible: false);
   }
 
   bool isLoggedIn() {
     return _auth.currentUser != null;
+  }
+
+  void navigateToLoginPage() {
+    Get.toNamed(LoginScreen.routeName);
   }
 }
