@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import '../../firebase_ref/references.dart';
 
-class QuestionPaperController extends GetxController {
+class QuizPaperController extends GetxController {
   final allPapers = <QuestionPaperModel>[].obs;
 
   @override
@@ -37,7 +37,15 @@ class QuestionPaperController extends GetxController {
       {required QuestionPaperModel paper, bool tryAgain = false}) {
     AuthController _authController = Get.find();
     if (_authController.isLoggedIn()) {
-      if(tryAgain)
+      if (tryAgain) {
+        Get.back();
+        // Get.offNamed();
+      } else {
+        // Get.toNamed();
+      }
+    } else {
+      print('Title is ${paper.title}');
+      _authController.showLoginAlertDialog();
     }
   }
 }
