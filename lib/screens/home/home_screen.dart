@@ -17,7 +17,7 @@ class HomeScreen extends GetView<MyZoomDrawerController> {
 
   @override
   Widget build(BuildContext context) {
-    QuestionPaperController _questionPaperController = Get.find();
+    QuizPaperController _questionPaperController = Get.find();
     return Scaffold(body: GetBuilder<MyZoomDrawerController>(builder: (_) {
       return ZoomDrawer(
         controller: _.zoomDrawerController,
