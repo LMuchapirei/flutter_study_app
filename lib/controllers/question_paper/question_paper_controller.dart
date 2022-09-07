@@ -5,6 +5,7 @@ import 'package:flutter_study_app/services/firebase_storage_service.dart';
 import 'package:get/get.dart';
 
 import '../../firebase_ref/references.dart';
+import '../../screens/question/question_screen.dart';
 
 class QuizPaperController extends GetxController {
   final allPapers = <QuestionPaperModel>[].obs;
@@ -37,8 +38,10 @@ class QuizPaperController extends GetxController {
       {required QuestionPaperModel paper, bool tryAgain = false}) {
     AuthController _authController = Get.find();
     if (_authController.isLoggedIn()) {
+      Get.toNamed(QuestionScreen.routeName, arguments: paper);
+
       if (tryAgain) {
-        Get.back();
+        // Get.back();
         // Get.offNamed();
       } else {
         // Get.toNamed();
