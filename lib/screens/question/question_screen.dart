@@ -13,7 +13,6 @@ class QuestionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var paper = Get.arguments as QuestionPaperModel;
-    print("The paper that was passed is ${paper.description}");
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -71,6 +70,18 @@ class QuestionScreen extends StatelessWidget {
                   )
                 ],
               ),
+              Spacer(
+                flex: 2,
+              ),
+              Text(
+                paper.questions![1].question,
+                style: detailTextStyle.copyWith(color: onSurfaceTextColor),
+              ),
+              for (var ans in paper.questions![1].answers)
+                Text(
+                  ans.answer != null ? ans.answer! : "N/A",
+                  style: detailTextStyle.copyWith(color: onSurfaceTextColor),
+                ),
             ]),
           ),
         ),
