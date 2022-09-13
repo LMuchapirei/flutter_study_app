@@ -6,6 +6,7 @@ import 'package:flutter_study_app/configs/themes/app_icons.dart';
 import '../../configs/themes/app_colors.dart';
 import '../../configs/themes/custom_text_styles.dart';
 import '../../configs/themes/ui_parameters.dart';
+import 'answers_report.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 cardBorderRadius),
                                             color: Theme.of(context).cardColor),
                                         height: Get.width * 0.15,
-                                        width: Get.width * 0.55,
+                                        width: Get.width * 0.855,
                                         child: Center(
                                             child: Text(
                                           "Q${key + 1}. ${_answersQuestionMap[key]}",
@@ -178,24 +179,30 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                     Spacer(
                                       flex: 2,
                                     ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 30),
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              cardBorderRadius),
-                                          color: Theme.of(context).cardColor),
-                                      height: Get.width * 0.15,
-                                      width: Get.width * 0.55,
-                                      child: Center(
-                                          child: Text(
-                                        "Complete",
-                                        style: headerTextStyle.copyWith(
-                                            color: customBlackColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      )),
+                                    InkWell(
+                                      onTap: () {
+                                        Get.offAllNamed(
+                                            AnswersReport.routeName);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 30),
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                cardBorderRadius),
+                                            color: Theme.of(context).cardColor),
+                                        height: Get.width * 0.15,
+                                        width: Get.width * 0.55,
+                                        child: Center(
+                                            child: Text(
+                                          "Complete",
+                                          style: headerTextStyle.copyWith(
+                                              color: customBlackColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        )),
+                                      ),
                                     ),
                                   ],
                                 ),
