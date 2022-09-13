@@ -21,7 +21,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   var selectedAnswer = "";
   Map<int, String> _answersQuestionMap = {};
   void updateColor() {}
-  Widget buildQuestionPreview(Questions paper, BuildContext context) {
+  Widget buildQuestionPreview(
+      Questions paper, BuildContext context, int numOfQuestions) {
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -77,6 +78,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                         showModalBottomSheet(
                             context: context,
                             isDismissible: true,
+                            isScrollControlled: true,
                             builder: (BuildContext context) {
                               return Container(
                                 decoration:
@@ -99,6 +101,60 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                     SizedBox(
                                       height: 10,
                                     ),
+                                    Text(
+                                      '${_answersQuestionMap.keys.length} out of $numOfQuestions answered',
+                                      style: detailTextStyle.copyWith(
+                                          color: onSurfaceTextColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        margin: EdgeInsets.all(5),
+                                        width: 160,
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0, vertical: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.timer,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                width: 2,
+                                              ),
+                                              Text(
+                                                "14:40",
+                                                style: detailTextStyle.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: onSurfaceTextColor),
+                                              ),
+                                              SizedBox(
+                                                width: 6,
+                                              ),
+                                              Text("Remaining",
+                                                  style: detailTextStyle.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color:
+                                                          onSurfaceTextColor))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     for (var key in _answersQuestionMap.keys)
                                       Container(
                                         padding: EdgeInsets.symmetric(
@@ -118,7 +174,29 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16),
                                         )),
-                                      )
+                                      ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 30),
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              cardBorderRadius),
+                                          color: Theme.of(context).cardColor),
+                                      height: Get.width * 0.15,
+                                      width: Get.width * 0.55,
+                                      child: Center(
+                                          child: Text(
+                                        "Complete",
+                                        style: headerTextStyle.copyWith(
+                                            color: customBlackColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      )),
+                                    ),
                                   ],
                                 ),
                               );
@@ -223,7 +301,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
       // physics: NeverScrollableScrollPhysics(),
       onPageChanged: _onChangedFunction,
       children: [
-        for (var q in paper.questions!) buildQuestionPreview(q, context)
+        for (var q in paper.questions!)
+          buildQuestionPreview(q, context, paper.questions!.length)
       ],
     );
   }
