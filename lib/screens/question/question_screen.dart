@@ -19,6 +19,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   static const _kDuration = Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
   var selectedAnswer = "";
+  Map<int, String> _answersQuestionMap = {};
   void updateColor() {}
   Widget buildQuestionPreview(Questions paper, BuildContext context) {
     return SafeArea(
@@ -71,9 +72,62 @@ class _QuestionScreenState extends State<QuestionScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Icon(
-                      AppIcons.menuLeft,
-                      color: onSurfaceTextColor,
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isDismissible: true,
+                            builder: (BuildContext context) {
+                              return Container(
+                                decoration:
+                                    BoxDecoration(gradient: mainGradientLight),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        "Selected Answers and Question",
+                                        style: detailTextStyle.copyWith(
+                                            color: onSurfaceTextColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    for (var key in _answersQuestionMap.keys)
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 30),
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                cardBorderRadius),
+                                            color: Theme.of(context).cardColor),
+                                        height: Get.width * 0.15,
+                                        width: Get.width * 0.55,
+                                        child: Center(
+                                            child: Text(
+                                          "Q${key + 1}. ${_answersQuestionMap[key]}",
+                                          style: headerTextStyle.copyWith(
+                                              color: customBlackColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        )),
+                                      )
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: Icon(
+                        AppIcons.menuLeft,
+                        color: onSurfaceTextColor,
+                      ),
                     ),
                   )
                 ],
@@ -93,7 +147,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedAnswer = ans.identifier!;
+                      _answersQuestionMap[_currentIndex] = ans.identifier!;
                     });
                   },
                   child: Container(
@@ -101,8 +155,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     margin: EdgeInsets.only(bottom: 5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(cardBorderRadius),
-                        color: selectedAnswer == ans.identifier
-                            ? activeColor
+                        color: _answersQuestionMap.containsKey(_currentIndex)
+                            ? _answersQuestionMap[_currentIndex] ==
+                                    ans.identifier
+                                ? activeColor
+                                : inactiveColor
                             : inactiveColor),
                     height: Get.width * 0.15,
                     width: Get.width * 0.855,
