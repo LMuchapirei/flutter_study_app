@@ -10,6 +10,9 @@ class AnswersReport extends StatelessWidget {
   static String routeName = "/answersReport";
   @override
   Widget build(BuildContext context) {
+    var resulstMap = Get.arguments as Map<String, dynamic>;
+    var usersAnswerMap = resulstMap["answersMap"] as Map<int, String>;
+    var actualQuestionsAMap = resulstMap["usersAnswersMap"] as Map<int, String>;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -17,9 +20,17 @@ class AnswersReport extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(mobileScreenPadding - 10),
+            padding: EdgeInsets.all(mobileScreenPadding - 20),
             child: Column(children: [
-              Center(child: Text("1 out of 5 where correct")),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                  child: Text(
+                      "${correctAnswers(usersAnswerMap, actualQuestionsAMap)} out of ${actualQuestionsAMap.keys.length} where correct",
+                      style: TextStyle(
+                          color: onSurfaceTextColor,
+                          fontWeight: FontWeight.bold))),
               SizedBox(
                 height: 30,
               ),
@@ -29,20 +40,35 @@ class AnswersReport extends StatelessWidget {
                 padding: UIParameters.mobileScreenPadding,
                 itemBuilder: (BuildContext context, index) {
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     margin: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(cardBorderRadius),
                         color: Theme.of(context).cardColor),
                     height: Get.width * 0.15,
-                    width: Get.width * 0.55,
+                    width: Get.width * 0.85,
                     child: Center(
-                        child: Text(
-                      "Complete",
-                      style: headerTextStyle.copyWith(
-                          color: customBlackColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                        child: Row(
+                      children: [
+                        usersAnswerMap[index] == actualQuestionsAMap[index]
+                            ? Icon(
+                                Icons.check_circle,
+                                color: colorLightGreen,
+                                size: 30,
+                              )
+                            : Icon(
+                                Icons.close_outlined,
+                                color: colorLightRed,
+                                size: 30,
+                              ),
+                        Text(
+                          "Q${index + 1}. ${usersAnswerMap[index]} correctAnswer is ${actualQuestionsAMap[index]}",
+                          style: headerTextStyle.copyWith(
+                              color: customBlackColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ],
                     )),
                   );
                 },
@@ -51,12 +77,28 @@ class AnswersReport extends StatelessWidget {
                     height: 20,
                   );
                 },
-                itemCount: 5,
+                itemCount: usersAnswerMap.keys.length,
               )))
             ]),
           ),
         ),
       ),
+    );
+  }
+
+  int correctAnswers(Map<int, String> usersAnswerMap, actualQuestionsAMap) {
+    var correct = 0;
+    for (var key in usersAnswerMap.keys) {
+      if (usersAnswerMap[key] == actualQuestionsAMap[key]) {
+        correct++;
+      }
+    }
+    return correct;
+  }
+
+  Widget buildSuccessCard() {
+    return Column(
+      children: [],
     );
   }
 }

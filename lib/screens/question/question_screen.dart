@@ -20,10 +20,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
   static const _kDuration = Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
   var selectedAnswer = "";
-  Map<int, String> _answersQuestionMap = {};
+  final Map<int, String> _answersQuestionMap = {};
+  final Map<int, String> _actualAnswersQuestionMap = {};
   void updateColor() {}
   Widget buildQuestionPreview(
-      Questions paper, BuildContext context, int numOfQuestions) {
+      Questions question, BuildContext context, int numOfQuestions) {
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -181,8 +182,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        Get.offAllNamed(
-                                            AnswersReport.routeName);
+                                        if (_answersQuestionMap.keys.length ==
+                                            numOfQuestions) {
+                                          Get.toNamed(AnswersReport.routeName,
+                                              arguments: {
+                                                "answersMap":
+                                                    _actualAnswersQuestionMap,
+                                                "usersAnswersMap":
+                                                    _answersQuestionMap
+                                              });
+                                        } else {
+                                          print("You have not completed");
+                                        }
                                       },
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
@@ -221,18 +232,20 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 flex: 2,
               ),
               Text(
-                paper.question,
+                question.question,
                 style: detailTextStyle.copyWith(
                     color: onSurfaceTextColor, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 10,
               ),
-              for (var ans in paper.answers)
+              for (var ans in question.answers)
                 GestureDetector(
                   onTap: () {
                     setState(() {
                       _answersQuestionMap[_currentIndex] = ans.identifier!;
+                      _actualAnswersQuestionMap[_currentIndex] =
+                          question.correctAnswer!;
                     });
                   },
                   child: Container(
