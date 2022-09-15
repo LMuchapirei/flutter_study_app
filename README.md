@@ -21,4 +21,4 @@ match /databases/{database}/documents {
 } 
 } -->
 
-continue @6:27:23
+Finished waiting for part two but building some of the stuff demoed on my own in this part_sel branch

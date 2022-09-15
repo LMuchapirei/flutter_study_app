@@ -89,12 +89,12 @@ class Answers {
 
   Answers.fromJson(Map<String, dynamic> json)
       : identifier = json['identifier'],
-        answer = json['Answer'];
+        answer = json['answer'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['identifier'] = this.identifier;
-    data['Answer'] = this.answer;
+    data['answer'] = this.answer;
     return data;
   }
 }
