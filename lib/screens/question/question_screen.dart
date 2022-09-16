@@ -23,8 +23,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final Map<int, String> _answersQuestionMap = {};
   final Map<int, String> _actualAnswersQuestionMap = {};
   void updateColor() {}
-  Widget buildQuestionPreview(
-      Questions question, BuildContext context, int numOfQuestions) {
+  Widget buildQuestionPreview(Questions question, BuildContext context,
+      int numOfQuestions, QuestionPaperModel paper) {
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -189,7 +189,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                                 "answersMap":
                                                     _actualAnswersQuestionMap,
                                                 "usersAnswersMap":
-                                                    _answersQuestionMap
+                                                    _answersQuestionMap,
+                                                "questionModel": question,
+                                                "paperModel": paper
                                               });
                                         } else {
                                           print("You have not completed");
@@ -322,7 +324,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       onPageChanged: _onChangedFunction,
       children: [
         for (var q in paper.questions!)
-          buildQuestionPreview(q, context, paper.questions!.length)
+          buildQuestionPreview(q, context, paper.questions!.length, paper)
       ],
     );
   }
