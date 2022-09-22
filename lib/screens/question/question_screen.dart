@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/models/question_paper_model.dart';
 import 'package:get/get.dart';
@@ -19,12 +21,17 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final PageController _pageController = PageController();
   static const _kDuration = Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
+  static const countdownDuration = Duration(minutes: 15);
+  Duration duration = Duration();
+  Timer? timer;
+  bool countDown = true;
   var selectedAnswer = "";
   final Map<int, String> _answersQuestionMap = {};
   final Map<int, String> _actualAnswersQuestionMap = {};
+
   void updateColor() {}
   Widget buildQuestionPreview(Questions question, BuildContext context,
-      int numOfQuestions, QuestionPaperModel paper) {
+      int numOfQuestions, QuestionPaperModel paper, String timerText) {
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -57,7 +64,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             width: 2,
                           ),
                           Text(
-                            "14:40",
+                            timerText,
                             style: detailTextStyle.copyWith(
                                 color: onSurfaceTextColor),
                           )
@@ -275,32 +282,51 @@ class _QuestionScreenState extends State<QuestionScreen> {
               Spacer(
                 flex: 2,
               ),
-              GestureDetector(
-                onTap: () {
-                  nextFunction();
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  margin: EdgeInsets.only(bottom: 5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(cardBorderRadius),
-                      color: Theme.of(context).cardColor),
-                  height: Get.width * 0.15,
-                  width: Get.width * 0.855,
-                  child: Center(
-                      child: Text(
-                    "Next",
-                    style: headerTextStyle.copyWith(
-                        color: customBlackColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  )),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        prevFunction();
+                      },
+                      child: containerButton(context, "Back"),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        nextFunction();
+                      },
+                      child: containerButton(context, "Next"),
+                    ),
+                  ),
+                ],
               ),
             ]),
           ),
         ),
       ),
+    );
+  }
+
+  Container containerButton(BuildContext context, String text) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.only(bottom: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(cardBorderRadius),
+          color: Theme.of(context).cardColor),
+      height: Get.width * 0.15,
+      width: Get.width * 0.855,
+      child: Center(
+          child: Text(
+        text,
+        style: headerTextStyle.copyWith(
+            color: customBlackColor, fontWeight: FontWeight.bold, fontSize: 16),
+      )),
     );
   }
 
@@ -315,16 +341,21 @@ class _QuestionScreenState extends State<QuestionScreen> {
     _pageController.nextPage(duration: _kDuration, curve: _kCurve);
   }
 
+  void prevFunction() {
+    _pageController.previousPage(duration: _kDuration, curve: _kCurve);
+  }
+
   @override
   Widget build(BuildContext context) {
     var paper = Get.arguments as QuestionPaperModel;
+    var time = buildTimeText();
     return PageView(
       controller: _pageController,
       // physics: NeverScrollableScrollPhysics(),
       onPageChanged: _onChangedFunction,
       children: [
         for (var q in paper.questions!)
-          buildQuestionPreview(q, context, paper.questions!.length, paper)
+          buildQuestionPreview(q, context, paper.questions!.length, paper, time)
       ],
     );
   }
@@ -333,6 +364,58 @@ class _QuestionScreenState extends State<QuestionScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    reset();
+    startTimer();
+  }
+
+  void reset() {
+    if (countDown) {
+      setState(() {
+        duration = countdownDuration;
+      });
+    } else {
+      setState(() {
+        duration = Duration();
+      });
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+  }
+
+  void addTime() {
+    final addSeconds = countDown ? -1 : 1;
+    setState(() {
+      final seconds = duration.inSeconds + addSeconds;
+      if (seconds < 0) {
+        timer?.cancel();
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void stopTimer({bool resets = true}) {
+    if (resets) {
+      reset();
+    }
+    setState(() {
+      timer?.cancel();
+    });
+  }
+
+  String buildTimeText() {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$hours:$minutes:$seconds';
   }
 }
 
