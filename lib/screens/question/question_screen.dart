@@ -440,6 +440,8 @@
 **/
 
 import 'package:flutter/material.dart';
+import 'package:flutter_study_app/firebase_ref/loading_status.dart';
+import 'package:flutter_study_app/widgets/common/question_place_holder.dart';
 import 'package:get/get.dart';
 import 'package:flutter_study_app/controllers/question_paper/questions_controller.dart';
 
@@ -456,9 +458,18 @@ class QuestionScreen extends GetView<QuestionsController> {
       child: Obx(
         (() => Column(
               children: [
-                Center(
-                  child: Text(controller.currentQuestion.value!.question),
-                ),
+                if (controller.loadingStatus.value == LoadingStatus.loading)
+                  const Expanded(child: Center(child: QuestionScreenHolder())),
+                if (controller.loadingStatus.value == LoadingStatus.completed)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Text(controller.currentQuestion.value!.question),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             )),
       ),
