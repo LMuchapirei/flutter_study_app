@@ -440,10 +440,13 @@
 **/
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_study_app/controllers/question_paper/questions_controller.dart';
 
 import '../../widgets/common/background_decoration.dart';
 
-class QuestionScreen extends StatelessWidget {
+class QuestionScreen extends GetView<QuestionsController> {
+  // lets our view know about the controller
   const QuestionScreen({Key? key}) : super(key: key);
   static const String routeName = "/questionsscreen";
   @override

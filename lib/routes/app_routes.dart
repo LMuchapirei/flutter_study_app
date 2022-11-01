@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_study_app/controllers/question_paper/questions_controller.dart';
 import 'package:flutter_study_app/controllers/question_paper/question_paper_controller.dart';
 import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/screens/introduction/introduction.dart';
@@ -23,7 +24,14 @@ class AppRoutes {
               Get.put(MyZoomDrawerController());
             })),
         GetPage(name: LoginScreen.routeName, page: () => const LoginScreen()),
-        GetPage(name: QuestionScreen.routeName, page: () => QuestionScreen()),
+
+        GetPage(
+            name: QuestionScreen.routeName,
+            binding: BindingsBuilder(() {
+              Get.put(QuestionsController());
+            }),
+            page: () =>
+                QuestionScreen()), // Bindings to be able to hook into the controller that we wrapped over this widget // Maybe l am using the wrong terminology
         GetPage(
             name: AnswersReport.routeName, page: () => const AnswersReport())
       ];
