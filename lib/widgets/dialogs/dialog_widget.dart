@@ -23,4 +23,24 @@ class Dialogs {
       actions: [TextButton(onPressed: onTap, child: Text('Confirm'))],
     );
   }
+
+  static Widget correctAnswerDialog(
+      {required VoidCallback onTap,
+      required String answer,
+      required String question}) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$question ",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          Text("Answer. $answer")
+        ],
+      ),
+      actions: [TextButton(onPressed: onTap, child: Text('Continue'))],
+    );
+  }
 }
