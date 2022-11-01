@@ -452,9 +452,16 @@ class QuestionScreen extends GetView<QuestionsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BackgroundDecoration(
-        child: Center(child: Text("I am here")),
+        body: BackgroundDecoration(
+      child: Obx(
+        (() => Column(
+              children: [
+                Center(
+                  child: Text(controller.currentQuestion.value!.question),
+                ),
+              ],
+            )),
       ),
-    );
+    ));
   }
 }

@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_study_app/firebase_ref/loading_status.dart';
 import 'package:flutter_study_app/models/question_paper_model.dart';
 import 'package:get/get.dart';
 
 import '../../firebase_ref/references.dart';
 
 class QuestionsController extends GetxController {
+  final loadingStatus = LoadingStatus.loading.obs;
   late QuestionPaperModel questionPaperModel;
   final allQuestion = <Questions>[];
+  Rxn<Questions> currentQuestion = Rxn<Questions>();
   @override
   void onReady() {
     // allows to grab objects passed when we navigate to any view that has access to this controller (The route argument we pass in the question_controller when we navigate to the QuestionScreen)
@@ -21,6 +24,7 @@ class QuestionsController extends GetxController {
 
   Future<void> loadData(QuestionPaperModel questionPaper) async {
     questionPaperModel = questionPaper;
+    loadingStatus.value = LoadingStatus.loading;
     try {
       final QuerySnapshot<Map<String, dynamic>> questionQuery =
           await questionPaperRF
@@ -46,6 +50,13 @@ class QuestionsController extends GetxController {
         if (questionPaper.questions != null &&
             questionPaper.questions!.isNotEmpty) {
           allQuestion.assignAll(questionPaper.questions!);
+          currentQuestion.value = questionPaper.questions![0];
+          if (kDebugMode) {
+            print(questionPaper.questions![0].question);
+          }
+          loadingStatus.value = LoadingStatus.completed;
+        } else {
+          loadingStatus.value = LoadingStatus.error;
         }
       }
     } catch (e) {
