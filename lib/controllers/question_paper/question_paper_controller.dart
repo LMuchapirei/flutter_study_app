@@ -64,16 +64,15 @@ class QuizPaperController extends GetxController {
       {required QuestionPaperModel paper, bool tryAgain = false}) {
     AuthController _authController = Get.find();
     if (_authController.isLoggedIn()) {
-      Get.toNamed(QuestionScreen.routeName, arguments: paper);
-
+      // Change this to the actual implementation as per the tutorial
+      //Get.toNamed(QuestionScreen.routeName, arguments: paper);
       if (tryAgain) {
-        // Get.back();
+        Get.back();
         // Get.offNamed();
       } else {
-        // Get.toNamed();
+        Get.toNamed(QuestionScreen.routeName, arguments: paper);
       }
     } else {
-      print('Title is ${paper.title}');
       _authController.showLoginAlertDialog();
     }
   }
