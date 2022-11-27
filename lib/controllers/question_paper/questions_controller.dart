@@ -79,4 +79,10 @@ class QuestionsController extends GetxController {
     questionIndex.value++;
     currentQuestion.value = allQuestions[questionIndex.value];
   }
+
+  void prevQuestion() {
+    if (questionIndex.value <= 0) return;
+    questionIndex.value--;
+    currentQuestion.value = allQuestions[questionIndex.value];
+  }
 }
