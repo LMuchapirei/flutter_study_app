@@ -14,7 +14,6 @@ class QuestionsController extends GetxController {
   @override
   void onReady() {
     // allows to grab objects passed when we navigate to any view that has access to this controller (The route argument we pass in the question_controller when we navigate to the QuestionScreen)
-
     final _questionPaper = Get.arguments
         as QuestionPaperModel; // We perfom a cast to cast the data
     print(_questionPaper.id);
@@ -64,5 +63,10 @@ class QuestionsController extends GetxController {
         print(e.toString());
       }
     }
+  }
+
+  void selectedAnswer(String? answer) {
+    currentQuestion.value!.selectedAnswer = answer;
+    update(['answers_list']);
   }
 }
