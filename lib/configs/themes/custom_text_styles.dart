@@ -9,5 +9,7 @@ TextStyle cardTitles(context) => TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold);
 const detailTextStyle = TextStyle(fontSize: 12);
+
+const questionTS = TextStyle(fontSize: 16, fontWeight: FontWeight.w800);
 const headerTextStyle = TextStyle(
     fontSize: 22, fontWeight: FontWeight.w700, color: onSurfaceTextColor);
