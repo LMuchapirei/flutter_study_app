@@ -440,8 +440,11 @@
 **/
 
 import 'package:flutter/material.dart';
+import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/configs/themes/custom_text_styles.dart';
+import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/firebase_ref/loading_status.dart';
+import 'package:flutter_study_app/widgets/common/main_button.dart';
 import 'package:flutter_study_app/widgets/common/question_place_holder.dart';
 import 'package:flutter_study_app/widgets/questions/answer_card.dart';
 import 'package:get/get.dart';
@@ -506,12 +509,37 @@ class QuestionScreen extends GetView<QuestionsController> {
                                       .currentQuestion.value!.answers.length,
                                 );
                               },
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
+                ColoredBox(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Padding(
+                    padding: UIParameters.mobileScreenPadding,
+                    child: Row(
+                      children: [
+                        Visibility(
+                            visible: controller.isFirstQuestion,
+                            child: SizedBox(
+                              width: 55,
+                              height: 55,
+                              child: MainButton(
+                                onTap: () {},
+                                child: Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: Get.isDarkMode
+                                      ? onSurfaceTextColor
+                                      : Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                )
               ],
             )),
       ),
