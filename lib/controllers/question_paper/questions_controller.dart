@@ -9,7 +9,9 @@ import '../../firebase_ref/references.dart';
 class QuestionsController extends GetxController {
   final loadingStatus = LoadingStatus.loading.obs;
   late QuestionPaperModel questionPaperModel;
-  final allQuestion = <Questions>[];
+  final allQuestions = <Questions>[];
+  final questionIndex = 0.obs;
+  bool get isFirstQuestion => questionIndex.value > 0;
   Rxn<Questions> currentQuestion = Rxn<Questions>();
   @override
   void onReady() {
@@ -48,7 +50,7 @@ class QuestionsController extends GetxController {
         _question.answers = answers;
         if (questionPaper.questions != null &&
             questionPaper.questions!.isNotEmpty) {
-          allQuestion.assignAll(questionPaper.questions!);
+          allQuestions.assignAll(questionPaper.questions!);
           currentQuestion.value = questionPaper.questions![0];
           if (kDebugMode) {
             print(questionPaper.questions![0].question);
@@ -70,5 +72,11 @@ class QuestionsController extends GetxController {
     update([
       'answers_list'
     ]); // point to which particular GetBuilder we want to update
+  }
+
+  void nextQuestion() {
+    if (questionIndex.value >= allQuestions.length - 1) return;
+    questionIndex.value++;
+    currentQuestion.value = allQuestions[questionIndex.value];
   }
 }
