@@ -444,6 +444,7 @@ import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/configs/themes/custom_text_styles.dart';
 import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/firebase_ref/loading_status.dart';
+import 'package:flutter_study_app/screens/question/test_overview_screen.dart';
 import 'package:flutter_study_app/widgets/common/main_button.dart';
 import 'package:flutter_study_app/widgets/common/question_place_holder.dart';
 import 'package:flutter_study_app/widgets/custom_app_bar.dart';
@@ -567,8 +568,10 @@ class QuestionScreen extends GetView<QuestionsController> {
                                       LoadingStatus.completed,
                                   child: MainButton(
                                     onTap: () {
-                                      // controller.isLastQuestion?Conta
-                                      controller.nextQuestion();
+                                      controller.isLastQuestion
+                                          ? Get.toNamed(
+                                              TestOverviewScreen.routeName)
+                                          : controller.nextQuestion();
                                     },
                                     title: controller.isLastQuestion
                                         ? 'Complete'
