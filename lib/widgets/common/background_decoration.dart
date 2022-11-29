@@ -20,7 +20,7 @@ class BackgroundDecoration extends StatelessWidget {
               color: showGradient ? null : Theme.of(context).primaryColor),
           child: CustomPaint(painter: BackgroundPainter()),
         )),
-        Positioned(child: child)
+        Positioned.fill(child: SafeArea(child: child))
       ],
     );
   }
