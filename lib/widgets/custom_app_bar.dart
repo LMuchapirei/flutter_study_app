@@ -1,10 +1,11 @@
 // ignore_for_file: unnecessary_null_in_if_null_operators
 
 import 'package:flutter/material.dart';
+import 'package:flutter_study_app/screens/question/test_overview_screen.dart';
+import 'package:get/get.dart';
 import 'package:flutter_study_app/configs/themes/custom_text_styles.dart';
 import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/widgets/app_circle_button.dart';
-
 import '../configs/themes/app_icons.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -55,8 +56,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Transform.translate(
                   offset: const Offset(10, 0),
                   child: AppCircleButton(
-                    opTap: onMenuActionTap ?? null,
-                    child: const Icon(AppIcons.menuLeft),
+                    opTap: onMenuActionTap ??
+                        () => Get.toNamed(TestOverviewScreen.routeName),
+                    child: const Icon(AppIcons.menu),
                   ),
                 )
             ],
