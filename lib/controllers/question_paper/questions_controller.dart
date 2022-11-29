@@ -85,6 +85,15 @@ class QuestionsController extends GetxController {
     ]); // point to which particular GetBuilder we want to update
   }
 
+  // getter in dart
+  String get completedTest {
+    final answered = allQuestions
+        .where((element) => element.selectedAnswer != null)
+        .toList()
+        .length;
+    return "$answered out of ${allQuestions.length} answered";
+  }
+
   void nextQuestion() {
     if (questionIndex.value >= allQuestions.length - 1) return;
     questionIndex.value++;
