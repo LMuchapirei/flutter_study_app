@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_study_app/firebase_ref/loading_status.dart';
 import 'package:flutter_study_app/models/question_paper_model.dart';
+import 'package:flutter_study_app/screens/question/result_screen.dart';
 import 'package:get/get.dart';
 
 import '../../firebase_ref/references.dart';
@@ -106,10 +107,23 @@ class QuestionsController extends GetxController {
     currentQuestion.value = allQuestions[questionIndex.value];
   }
 
+  void jumpToQuestion(int index, {bool isGoBack = true}) {
+    questionIndex.value = index;
+    currentQuestion.value = allQuestions[index];
+    if (isGoBack) {
+      Get.back();
+    }
+  }
+
+  void complete() {
+    _timer!.cancel(); //cancel timer to prevent memory leaks
+    Get.offNamed(ResultScreen.routeName);
+  }
+
   _startTimer(int seconds) {
     const duration = Duration(seconds: 1);
     remainingSeconds = seconds;
-    Timer.periodic(duration, (Timer timer) {
+    _timer = Timer.periodic(duration, (Timer timer) {
       if (remainingSeconds == 0) {
         timer.cancel();
       } else {
