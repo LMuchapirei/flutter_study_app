@@ -3,8 +3,10 @@ import 'package:flutter_study_app/controllers/question_paper/question_paper_cont
 import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/screens/introduction/introduction.dart';
 import 'package:flutter_study_app/screens/login/login_screen.dart';
+import 'package:flutter_study_app/screens/question/answer_check_screen.dart';
 import 'package:flutter_study_app/screens/question/answers_report.dart';
 import 'package:flutter_study_app/screens/question/question_screen.dart';
+import 'package:flutter_study_app/screens/question/result_screen.dart';
 import 'package:flutter_study_app/screens/question/test_overview_screen.dart';
 
 import '../controllers/zoom_drawer_controller.dart';
@@ -36,6 +38,9 @@ class AppRoutes {
             name: AnswersReport.routeName, page: () => const AnswersReport()),
         GetPage(
             name: TestOverviewScreen.routeName,
-            page: () => const TestOverviewScreen())
+            page: () => const TestOverviewScreen()),
+        GetPage(name: ResultScreen.routeName, page: () => const ResultScreen()),
+        GetPage(
+            name: AnswerCheckScreen.routeName, page: () => AnswerCheckScreen())
       ];
 }
