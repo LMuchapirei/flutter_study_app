@@ -44,7 +44,8 @@ dependencies:
   url_launcher: ^6.0.18
   google_sign_in: ^5.4.0
   flutter_svg: ^1.0.0
-
+  shimmer: ^2.0.0
+  easy_separator: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
