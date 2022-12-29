@@ -3,6 +3,7 @@ import 'package:flutter_study_app/configs/themes/custom_text_styles.dart';
 import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/controllers/question_paper/questions_controller.dart';
 import 'package:flutter_study_app/widgets/common/background_decoration.dart';
+import 'package:flutter_study_app/widgets/common/main_button.dart';
 import 'package:flutter_study_app/widgets/content_area.dart';
 import 'package:flutter_study_app/widgets/custom_app_bar.dart';
 import 'package:flutter_study_app/widgets/questions/answer_card.dart';
@@ -66,8 +67,22 @@ class TestOverviewScreen extends GetView<QuestionsController> {
                       return QuestionNumberCard(
                           index: index + 1,
                           status: _answerStatus,
-                          onTap: () {});
+                          onTap: () {
+                            controller.jumpToQuestion(index);
+                          });
                     }),
+              ),
+              ColoredBox(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Padding(
+                  padding: UIParameters.mobileScreenPadding,
+                  child: MainButton(
+                    onTap: () {
+                      controller.complete();
+                    },
+                    title: 'Complete',
+                  ),
+                ),
               )
             ],
           )))
