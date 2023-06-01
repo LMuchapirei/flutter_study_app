@@ -37,29 +37,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA3EsVB_M0HwJlahNX9Na7wADdg7imSyFo',
-    appId: '1:568769521042:web:1006b75b1df64409db8d4b',
-    messagingSenderId: '568769521042',
-    projectId: 'study-app-edc41',
-    authDomain: 'study-app-edc41.firebaseapp.com',
-    storageBucket: 'study-app-edc41.appspot.com',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    authDomain: '',
+    storageBucket: '',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBrNq0rvtS9gSpIGKMG9CvNElqpzGLxvWg',
-    appId: '1:568769521042:android:46db55b81af2c8b3db8d4b',
-    messagingSenderId: '568769521042',
-    projectId: 'study-app-edc41',
-    storageBucket: 'study-app-edc41.appspot.com',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCb6oj-WTBT6pi3gowLrxdUcfAT5jfb1Tk',
-    appId: '1:568769521042:ios:0562ba146de06aa1db8d4b',
-    messagingSenderId: '568769521042',
-    projectId: 'study-app-edc41',
-    storageBucket: 'study-app-edc41.appspot.com',
-    iosClientId: '568769521042-kapoa06f9vk8oe72fmeod9jtac97fvu7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.app',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
+    iosClientId: '',
+    iosBundleId: '',
   );
 }
