@@ -23,11 +23,8 @@ match /databases/{database}/documents {
 
 Finished waiting for part two but building some of the stuff demoed on my own in this part_sel branch
 
-Part 2 received 
-now @ 1:25:00
-
-
-Part 3 in progress
+Part 2 Completed
+Part 3 in Completed
 
 New Widgets to look at 
   1. Visibility
@@ -48,4 +45,3 @@ If either operand is a [double], then the other operand is converted to a double
   10. What is this   AppIcons._();
   11. SliverGridDelegateWithFixedCrossAxisCount, GridView Builder
   12. InkWidget
-  Continue @03:54:48
