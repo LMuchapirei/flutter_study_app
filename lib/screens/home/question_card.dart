@@ -59,6 +59,7 @@ class QuestionCard extends GetView<QuizPaperController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("Hello world"),
                         Text(
                           model.title,
                           style: cardTitles(context),
