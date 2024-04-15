@@ -1,5 +1,7 @@
+import 'package:flutter_study_app/controllers/chat_documents/document_uploader.dart';
 import 'package:flutter_study_app/controllers/question_paper/questions_controller.dart';
 import 'package:flutter_study_app/controllers/question_paper/question_paper_controller.dart';
+import 'package:flutter_study_app/screens/chat/chat_home.dart';
 import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/screens/introduction/introduction.dart';
 import 'package:flutter_study_app/screens/login/login_screen.dart';
@@ -16,10 +18,15 @@ import 'package:get/get.dart';
 class AppRoutes {
   static routes() => [
         GetPage(name: "/", page: () => const SplashScreen()),
+        GetPage(name: ChatScreen.routeName,
+        page:()=>ChatScreen(),
+        binding:BindingsBuilder(() {
+          Get.put(DocumentUploader());
+        }) ),
         GetPage(
             name: "/introduction", page: () => const AppIntroductionScreen()),
         GetPage(
-            name: "/home",
+            name:HomeScreen.routeName,
             page: () => const HomeScreen(),
             binding: BindingsBuilder(() {
               Get.put(QuizPaperController());
@@ -41,6 +48,6 @@ class AppRoutes {
             page: () => const TestOverviewScreen()),
         GetPage(name: ResultScreen.routeName, page: () => const ResultScreen()),
         GetPage(
-            name: AnswerCheckScreen.routeName, page: () => AnswerCheckScreen())
+            name: AnswerCheckScreen.routeName, page: () => AnswerCheckScreen()),
       ];
 }
