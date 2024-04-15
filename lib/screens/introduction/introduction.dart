@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
+import 'package:flutter_study_app/screens/home/home_screen.dart';
 import 'package:flutter_study_app/widgets/app_circle_button.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +39,7 @@ class AppIntroductionScreen extends StatelessWidget {
               ),
               AppCircleButton(
                 opTap: () {
-                  Get.offAndToNamed("/home");
+                  Get.offAndToNamed(HomeScreen.routeName);
                 },
                 child: const Icon(Icons.arrow_forward),
               )
