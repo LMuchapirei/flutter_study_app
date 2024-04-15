@@ -97,9 +97,28 @@ class ChatScreen extends GetView<DocumentUploader> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text("Document ${_documentUploaderController.getFileName(document.documentName!)}"),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text("Document ${_documentUploaderController.getFileName(document.documentName!)}",
+                                            style: headerTextStyle.copyWith(
+                                              fontSize: 16,
+                                              color: Colors.black
+                                            ),
+                                            textAlign: TextAlign.center,
+                                            ),
                                             Container(
                                               height: MediaQuery.of(context).size.height * 0.65,
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 15,
+                                                vertical: 15
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.grey.shade300,
+                                                  width: 2
+                                                )
+                                              ),
                                               child: PDFView(
                                                 filePath: file.path,
                                                 enableSwipe: true,
