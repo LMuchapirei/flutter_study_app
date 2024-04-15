@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/controllers/zoom_drawer_controller.dart';
+import 'package:flutter_study_app/screens/chat/chat_home.dart';
 import 'package:get/get.dart';
 
 class MenuScreen extends GetView<MyZoomDrawerController> {
@@ -49,11 +50,14 @@ class MenuScreen extends GetView<MyZoomDrawerController> {
                     const Spacer(
                       flex: 1,
                     ),
+                    _DrawerButton(icon: Icons.chat_bubble_outline, label: "Chat", onPressed: (){
+                       Get.toNamed(ChatScreen.routeName);
+                    }),
                     _DrawerButton(
                         icon: Icons.web,
                         label: "WebSite",
                         onPressed: () {
-                          controller.webSite();
+                          controller.webSite(); /// Go to the chat with the pdf in netlify
                         }),
                     _DrawerButton(
                         icon: Icons.facebook,
