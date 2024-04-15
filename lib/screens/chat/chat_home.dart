@@ -18,43 +18,111 @@ class ChatScreen extends GetView<DocumentUploader> {
   Widget build(BuildContext context) {
     DocumentUploader _documentUploader = Get.find();
     AuthController _authController = Get.find();
-    _documentUploader.getDocuments(_authController.getUser()!);
+    // _documentUploader.getDocuments(_authController.getUser()!);
     return SafeArea(
       child: Scaffold(
         body:
          Container(
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-           child: Column(
+              decoration: BoxDecoration(gradient: mainGradient(context)),
+           child: 
+           Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if(_documentUploader.myDocuments.isNotEmpty)
-                Expanded(
-                  child: Padding(padding: const EdgeInsets.symmetric(
-                    horizontal: 8
-                  ),
-                  child: ContentArea(
-                    addPadding: false,
-                    child: ListView.separated(
-                      itemBuilder:  (context, index) {
-                        return Text("This is the item- $index");
-                      }, 
-                      separatorBuilder: (BuildContext context, index) {
-                            return const SizedBox(
-                              height: 20,
+              children: [  
+                Flexible(
+                  flex: 7,
+                  child: Obx(
+                  () {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8
+                      ),
+                      child: ContentArea(
+                        child: ListView.separated(
+                          itemBuilder:  (context, index) {
+                            final document = _documentUploader.myDocuments[index];
+                            return Ink(            
+                              child: Container(
+                               decoration: BoxDecoration(
+                               color: Colors.white,                
+                               ),
+                                child: Column(
+                                  children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          fit: FlexFit.tight,
+                                          child: CircleAvatar(
+                                            radius: 14,
+                                            backgroundColor: Colors.blue,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          flex: 3,
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            _documentUploader.getFileName(document.documentName!),
+                                            ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(Icons.add,color: Colors.grey,),
+                                          SizedBox(width: 10,),
+                                          Text(document.uploadTime ?? "Nov 21, 2023"),
+                                        ],
+                                      ),
+                                      Icon(Icons.chat_outlined,color: Colors.grey,),
+                                      Container(
+                                        height: 30,
+                                        width: 80,
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 5
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.withOpacity(0.7),
+                                          borderRadius: BorderRadius.circular(8)
+                                        ),
+                                        child: Icon(Icons.delete_outline),
+                                      )
+                                    ],
+                                  )
+                                  
+                                ]),
+                              ) ,
                             );
                           }, 
-                      itemCount: _documentUploader.myDocuments.length)),
-                    ) ,
+                          separatorBuilder: (BuildContext context, index) {
+                                return const SizedBox(
+                                  height: 20,
+                                );
+                              }, 
+                          itemCount: _documentUploader.myDocuments.length),
+                      ),
+                        );
+                    }
                   ),
-                Container(
+                ),
+              Flexible(
+                flex: 3,
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
                   margin: UIParameters.mobileScreenPadding,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: MediaQuery.of(context).size.width,                           
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: UIParameters.cardBorderRadius,
                   ),
                   child: GestureDetector(
@@ -73,21 +141,39 @@ class ChatScreen extends GetView<DocumentUploader> {
                         } else {
                           print("No file selected");
                         }
- 
+                 
                     },
                     child: SvgPicture.asset(
                         "assets/images/addpdf.svg",
-                        height: MediaQuery.of(context).size.width * 0.35,
-                        width: MediaQuery.of(context).size.width * 0.35,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        width: MediaQuery.of(context).size.height * 0.1,
                         semanticsLabel: 'Acme Logo'
                       ),
                   ),
                 ),
-                Padding(
-                  padding: UIParameters.mobileScreenPadding,
-                  child: Text("No files uploaded at the moment to chat with,click the button above to upload a new pdf file",
-                  textAlign: TextAlign.center,),
+                Obx(
+                   () {
+                    final hasDocuments = _documentUploader.myDocuments.isNotEmpty;
+                    return Padding(
+                      padding: UIParameters.mobileScreenPadding,
+                      child: 
+                      !hasDocuments ?
+                      Text("No files uploaded at the moment to chat with,click the button above to upload a new pdf file",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                      ):
+                       Text("Click the button above to upload a new pdf file",
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                      textAlign: TextAlign.center,),
+                    );
+                  }
                 )
+                ],
+                            ))
               ],
             ),
          ),
