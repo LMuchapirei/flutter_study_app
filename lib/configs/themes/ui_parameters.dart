@@ -14,4 +14,6 @@ class UIParameters {
   static bool isDarkMode() {
     return Get.isDarkMode ? true : false;
   }
+
+  static double get iconSize => 25.0;
 }

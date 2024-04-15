@@ -74,6 +74,9 @@ class AuthController extends GetxController {
   }
 
   User? getUser() {
+    if(!isLoggedIn()){
+      return null;
+    }
     _user.value = _auth.currentUser;
     return _user.value;
   }
