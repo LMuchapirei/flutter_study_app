@@ -1,6 +1,7 @@
 
 import 'dart:io';
-
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_study_app/controllers/auth_controller.dart';
 import 'package:flutter_study_app/firebase_ref/references.dart';
@@ -13,14 +14,17 @@ import 'document_model.dart';
 
 
 class DocumentUploader extends GetxController{
-    final myDocuments = <PDFDocument>[];
+    final myDocuments = <PDFDocument>[].obs;
     @override
     void onReady(){
       super.onReady();
       AuthController _authController = Get.find();
       getDocuments(_authController.getUser()!);
     }
-
+   
+    getFileName(String filePath){
+      return basename(filePath);
+    }
 
     Future<void> uploadDocument(File file,User user ) async {
       final _firebaseStorage = FirebaseStorage.instance;
@@ -37,10 +41,12 @@ class DocumentUploader extends GetxController{
 
    /// please add exception handling
    saveDocument(String downloadUrl,String documentName,User user){
+    final uploadTime = DateFormat.yMMMd().format(DateTime.now());
      final userId = user.uid;
      documentRF.doc(userId).collection("myDocuments").doc().set({
         "documentName":documentName,
-        "downloadUrl":downloadUrl
+        "downloadUrl":downloadUrl,
+        "uploadTime":uploadTime
      });
    }
 
@@ -48,11 +54,11 @@ class DocumentUploader extends GetxController{
       final querySnapshot = await  documentRF.doc(user.uid).collection("myDocuments").get();
 
       final documentsList = <PDFDocument>[];
-      querySnapshot.docs.forEach((element) {
+      for (var element in querySnapshot.docs) {
         final document = PDFDocument.fromJson(element.data());
         print("document $document");
         documentsList.add(document);
-      });
+      }
 
      myDocuments.assignAll(documentsList);
    }
