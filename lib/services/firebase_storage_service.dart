@@ -9,11 +9,8 @@ class FirebaseStorageService extends GetxService {
     if (imgName == null) {
       return null;
     }
-    print("Hello ndiripano");
     final storageRef =
         FirebaseStorage.instance.ref().child("question_paper_images");
-    final listResult = await storageRef.listAll();
-    print(" LIst ref $listResult");
     try {
       var urlRef = firebaseStorage
           .child("question_paper_images")
