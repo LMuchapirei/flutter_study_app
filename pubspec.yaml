@@ -37,15 +37,18 @@ dependencies:
   firebase_core: ^1.21.0
   cloud_firestore: ^3.4.5
   google_fonts: ^3.0.1
+  firebase_auth: ^3.5.0
   firebase_storage: ^10.3.6
   cached_network_image: ^3.2.0
   flutter_zoom_drawer: ^2.0.2
-  firebase_auth: 
   url_launcher: ^6.0.18
   google_sign_in: ^5.4.0
   flutter_svg: ^1.0.0
   shimmer: ^2.0.0
   easy_separator: ^1.0.1
+  file_picker: ^5.3.1
+dependency_overrides:
+  firebase_core_platform_interface: ^4.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
