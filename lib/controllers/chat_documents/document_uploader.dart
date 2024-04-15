@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -52,14 +53,17 @@ class DocumentUploader extends GetxController{
 
    Future<void> getDocuments(User user) async {
       final querySnapshot = await  documentRF.doc(user.uid).collection("myDocuments").get();
-
       final documentsList = <PDFDocument>[];
       for (var element in querySnapshot.docs) {
         final document = PDFDocument.fromJson(element.data());
         print("document $document");
         documentsList.add(document);
       }
-
      myDocuments.assignAll(documentsList);
+   }
+
+   Future<File> getFile(String downloadUrl) async {
+      final file = await DefaultCacheManager().getSingleFile(downloadUrl);
+      return file;
    }
 }
