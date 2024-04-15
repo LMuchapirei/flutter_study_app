@@ -45,3 +45,17 @@ If either operand is a [double], then the other operand is converted to a double
   10. What is this   AppIcons._();
   11. SliverGridDelegateWithFixedCrossAxisCount, GridView Builder
   12. InkWidget
+
+
+
+
+Add feature to chat with pdf
+
+1. Upload PDF document to firebase storage
+2. Retrieve upload documents
+3. Open the pdf document using any third party pdf rendering package
+4. Combine the pdf view with a chat screen or create a seperate screen to handle the chat 
+5. Consider creating api to handle the chat process as in the chat_to_pdf app you create earlier
+
+
+More precise information to be added in this file
