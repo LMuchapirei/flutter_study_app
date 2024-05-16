@@ -11,9 +11,12 @@ import 'package:flutter_study_app/screens/question/question_screen.dart';
 import 'package:flutter_study_app/screens/question/result_screen.dart';
 import 'package:flutter_study_app/screens/question/test_overview_screen.dart';
 
+import '../controllers/questions_uploader/questions_uploader.dart';
 import '../controllers/zoom_drawer_controller.dart';
 import '../screens/splash/splash_screen.dart';
 import 'package:get/get.dart';
+
+import '../screens/upload_questions/uploader_home.dart';
 
 class AppRoutes {
   static routes() => [
@@ -33,7 +36,12 @@ class AppRoutes {
               Get.put(MyZoomDrawerController());
             })),
         GetPage(name: LoginScreen.routeName, page: () => const LoginScreen()),
-
+        GetPage(name: QuestionsUploadHome.routeName,
+                page:()=>QuestionsUploadHome(),
+                binding: BindingsBuilder(() {
+                Get.put<QuestionsUploaderController>(QuestionsUploaderController());
+            }),
+                ),
         GetPage(
             name: QuestionScreen.routeName,
             binding: BindingsBuilder(() {

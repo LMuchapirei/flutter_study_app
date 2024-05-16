@@ -16,4 +16,9 @@ class UIParameters {
   }
 
   static double get iconSize => 25.0;
+
+  static InputDecoration  inputDecoration({ required String hintText} ) => InputDecoration(
+    hintText: hintText,
+    
+  );
 }

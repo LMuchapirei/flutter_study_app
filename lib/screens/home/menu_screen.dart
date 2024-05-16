@@ -3,6 +3,7 @@ import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/configs/themes/ui_parameters.dart';
 import 'package:flutter_study_app/controllers/zoom_drawer_controller.dart';
 import 'package:flutter_study_app/screens/chat/chat_home.dart';
+import 'package:flutter_study_app/screens/upload_questions/uploader_home.dart';
 import 'package:get/get.dart';
 
 class MenuScreen extends GetView<MyZoomDrawerController> {
@@ -60,10 +61,10 @@ class MenuScreen extends GetView<MyZoomDrawerController> {
                           controller.webSite(); /// Go to the chat with the pdf in netlify
                         }),
                     _DrawerButton(
-                        icon: Icons.facebook,
-                        label: "Facebook",
+                        icon: Icons.school,
+                        label: "Questions",
                         onPressed: () {
-                          controller.facebook();
+                         Get.toNamed(QuestionsUploadHome.routeName);
                         }),
                     Padding(
                       padding: const EdgeInsets.only(left: 25.0),
