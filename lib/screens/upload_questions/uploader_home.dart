@@ -129,9 +129,10 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                               Padding(
                                                 padding:UIParameters.mobileScreenPadding,
                                                 child: MainButton(
-                                                  onTap: () {
-                                                    print("This is the question");
-                                                    _questionsUploadController.createQuestionHeader();
+                                                  onTap: () async {
+                                                    print("This is the question header");
+                                                    final questionBankHeader = await _questionsUploadController.createQuestionHeader();
+                                                     print(questionBankHeader);
                                                   },
                                                   title: 'Add Questions',
                                                 ),
