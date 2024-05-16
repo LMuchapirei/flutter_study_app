@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_study_app/controllers/auth_controller.dart';
+import 'package:flutter_study_app/controllers/questions_uploader/question_model.dart';
 import 'package:get/get.dart';
 
 
@@ -10,7 +11,7 @@ import 'package:get/get.dart';
 class QuestionsUploaderController extends GetxController{
 
    final formKey = GlobalKey<FormState>();
-   Map<String,dynamic> questionBank = {
+   Map<String,dynamic> questionBankHeader = {
     "subject":"",
     "numberOfQuestions":""
    };
@@ -32,8 +33,8 @@ class QuestionsUploaderController extends GetxController{
       return null;
     }
 
-    void saveSubject(String? subject) =>  questionBank["subject"] = subject;
-    void saveNumberOfQuestions(String? numberOfQuestions) =>  questionBank["numberOfQuestions"] = numberOfQuestions;
+    void saveSubject(String? subject) =>  questionBankHeader["subject"] = subject;
+    void saveNumberOfQuestions(String? numberOfQuestions) =>  questionBankHeader["numberOfQuestions"] = int.tryParse(numberOfQuestions!);
 
 
     String? validateNumberOfQuestions(String? questionsCount){
@@ -43,7 +44,7 @@ class QuestionsUploaderController extends GetxController{
       return null;
     }
 
-    Future createQuestionHeader() async {
+    Future<QuestionSubject?> createQuestionHeader() async {
       if(formKey.currentState!.validate()){
         Get.snackbar("Success", 
         "Created Question Bank,proceed to add questions under this subject",
@@ -53,7 +54,7 @@ class QuestionsUploaderController extends GetxController{
         );
         /// Build the question object and return it to caller
         formKey.currentState!.save();
-        return;
+        return QuestionSubject.fromJson(questionBankHeader);
       }
       Get.snackbar(
         "Error",
@@ -62,5 +63,6 @@ class QuestionsUploaderController extends GetxController{
         colorText: Colors.white,
         backgroundColor: Colors.red
         );
+        return null;
     }
 }
