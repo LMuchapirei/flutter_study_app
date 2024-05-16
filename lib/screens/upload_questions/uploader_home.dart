@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/controllers/auth_controller.dart';
+import 'package:flutter_study_app/widgets/common/custom_form_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -75,7 +76,7 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                   ),
                   child: GestureDetector(
                     onTap: () async {               
-                        await showModalBottomSheet(
+                       final questionHeaderData =  await showModalBottomSheet(
                            context: context,
                            isDismissible: false,
                            backgroundColor:  customScaffoldColor(context),
@@ -98,28 +99,45 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                     padding: UIParameters.mobileScreenPadding,
                                     child: SingleChildScrollView(
                                       scrollDirection: Axis.vertical,
-                                      child: Column(
-                                          children: [
-                                              Center(
-                                                child: Text("Create Question",style: detailTextStyle.copyWith(
-                                                color: Get.isDarkMode
-                                                    ? Colors.white
-                                                    : Theme.of(context).primaryColor),),
-                                              ),
-                                              TextField(
-                                                decoration: UIParameters.inputDecoration(hintText: "Subject"),
-                                              ),
+                                      child: Form(
+                                       key: _questionsUploadController.formKey,
+                                        child: Column(
+                                            children: [
+                                                Center(
+                                                  child: Text("Create Question",style: detailTextStyle.copyWith(
+                                                  fontSize: 18,
+                                                  color: Get.isDarkMode
+                                                      ? Colors.white
+                                                      : Theme.of(context).primaryColor),),
+                                                ),
+                                                CustomFormField(
+                                                  hintText: "Subject",
+                                                  requiresPadding: false,
+                                                  validator: _questionsUploadController.validateSubject,
+                                                  onSaved: _questionsUploadController.saveSubject,
 
-                                            Padding(
-                                              padding:UIParameters.mobileScreenPadding,
-                                              child: MainButton(
-                                                onTap: () {
-                                                  
-                                                },
-                                                title: 'Add Question',
+                                                  ),
+                                                CustomFormField(
+                                                  hintText: "Number of Questions",
+                                                  requiresPadding: false,
+                                                  textInputType:  TextInputType.number,
+                                                  validator: _questionsUploadController.validateNumberOfQuestions,
+                                                  onSaved: _questionsUploadController.saveNumberOfQuestions,
+
+                                                  ),
+                                      
+                                              Padding(
+                                                padding:UIParameters.mobileScreenPadding,
+                                                child: MainButton(
+                                                  onTap: () {
+                                                    print("This is the question");
+                                                    _questionsUploadController.createQuestionHeader();
+                                                  },
+                                                  title: 'Add Questions',
+                                                ),
                                               ),
-                                            ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
