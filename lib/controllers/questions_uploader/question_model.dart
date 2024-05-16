@@ -20,4 +20,9 @@ class QuestionSubject {
     data["numberOfQuestions"] = numberOfQuestions;
     return data;
   }
+
+  @override
+  String toString() {
+    return { "subject":subject, "numberOfQuestions":numberOfQuestions}.toString();
+  }
 }
