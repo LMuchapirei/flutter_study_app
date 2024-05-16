@@ -21,7 +21,6 @@ class ChatScreen extends GetView<DocumentUploader> {
   Widget build(BuildContext context) {
     DocumentUploader _documentUploaderController = Get.find();
     AuthController _authController = Get.find();
-    // _documentUploader.getDocuments(_authController.getUser()!);
     return SafeArea(
       child: Scaffold(
         body:
@@ -86,6 +85,9 @@ class ChatScreen extends GetView<DocumentUploader> {
                                     context: context, 
                                     isDismissible: false,
                                     isScrollControlled: true,
+                                     shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+                                    ),
                                     builder: (context){
                                       return Container(
                                         decoration: BoxDecoration(
