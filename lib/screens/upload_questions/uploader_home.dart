@@ -130,9 +130,10 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                 padding:UIParameters.mobileScreenPadding,
                                                 child: MainButton(
                                                   onTap: () async {
-                                                    print("This is the question header");
                                                     final questionBankHeader = await _questionsUploadController.createQuestionHeader();
-                                                     print(questionBankHeader);
+                                                    if(questionBankHeader != null){
+                                                       Navigator.of(context).pop(questionBankHeader);
+                                                    }
                                                   },
                                                   title: 'Add Questions',
                                                 ),
@@ -145,6 +146,9 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                               }),
                             );
                         });
+                       /// We will be here unless there is an error
+                       print(questionHeaderData);
+                       /// Capture the questions and the images 
                     },
                     child: SvgPicture.asset(
                         "assets/images/addpdf.svg",
