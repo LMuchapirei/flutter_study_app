@@ -1,4 +1,7 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/controllers/auth_controller.dart';
@@ -9,6 +12,7 @@ import 'package:get/get.dart';
 import '../../configs/themes/app_icons.dart';
 import '../../configs/themes/custom_text_styles.dart';
 import '../../configs/themes/ui_parameters.dart';
+import '../../controllers/questions_uploader/question_model.dart';
 import '../../controllers/questions_uploader/questions_uploader.dart';
 import '../../widgets/common/main_button.dart';
 
@@ -76,7 +80,7 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                   ),
                   child: GestureDetector(
                     onTap: () async {               
-                       final questionHeaderData =  await showModalBottomSheet(
+                        QuestionSubject? questionHeaderData =  await showModalBottomSheet(
                            context: context,
                            isDismissible: false,
                            backgroundColor:  customScaffoldColor(context),
@@ -130,9 +134,10 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                 padding:UIParameters.mobileScreenPadding,
                                                 child: MainButton(
                                                   onTap: () async {
-                                                    print("This is the question header");
                                                     final questionBankHeader = await _questionsUploadController.createQuestionHeader();
-                                                     print(questionBankHeader);
+                                                    if(questionBankHeader != null){
+                                                       Navigator.of(context).pop(questionBankHeader);
+                                                    }
                                                   },
                                                   title: 'Add Questions',
                                                 ),
@@ -145,6 +150,26 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                               }),
                             );
                         });
+                       /// We will be here unless there is an error
+                       print(questionHeaderData);
+                       /// Capture the questions and the images 
+                       if(questionHeaderData != null)
+                       showModalBottomSheet(
+                           context: context, 
+                           isDismissible: false,
+                           backgroundColor:  customScaffoldColor(context),
+                           isScrollControlled: true,
+                           shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(cardBorderRadius)),
+                           ),
+                          builder: (context){
+                              return Padding(
+                              padding:  EdgeInsets.only(
+                                // bottom:    
+                                //     MediaQuery.of(context).viewInsets.bottom                
+                              ),
+                              child: QuestionEntryForm(questionHeaderData: questionHeaderData));
+                          });
                     },
                     child: SvgPicture.asset(
                         "assets/images/addpdf.svg",
@@ -159,5 +184,131 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
          ),
       ),
     );
+  }
+}
+
+class QuestionEntryForm extends StatefulWidget {
+   QuestionEntryForm({
+    Key? key,
+    required this.questionHeaderData,
+  }) : super(key: key);
+
+  final QuestionSubject? questionHeaderData;
+
+  @override
+  State<QuestionEntryForm> createState() => _QuestionEntryFormState();
+}
+
+class _QuestionEntryFormState extends State<QuestionEntryForm> {
+  List<Step> steps= [];
+  int currentQuestion = 0;
+  final Map<int,Map<String,dynamic>> _questionsMap = {};
+  void generateSteps(){
+    List<Step> _steps = [];
+    final questionCount = widget.questionHeaderData!.numberOfQuestions;
+    for(var idx = 0; idx < questionCount!; idx++){
+      print("Current item ${_questionsMap[idx]}");
+      final _currentStep = Step(
+        title: Text("Question ${idx + 1}"), 
+        content: Column(
+        children: [
+          CustomFormField(hintText: "Enter Question",onChange: (p0) {
+            setState(() {
+              final currentEntry = _questionsMap[idx];
+             _questionsMap[idx]={
+              ...currentEntry!,
+              "Question":p0
+            };
+            });
+          },),
+          _questionsMap[idx] ==null || _questionsMap[idx]!["image"] == null
+          ?
+          Center(
+            child: MainButton(
+              title: "Click Add Image",
+              onTap: () async{
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['jpg','png']
+                );
+                if (result != null) {
+                List<File> files = result.paths.map((path) => File(path!)).toList();
+                //// Handle file uploading to firebase storage
+                final firstFile = files.first;
+                if(files.isNotEmpty){
+                   //// Handler to capture document uplaod
+                   setState(() {
+                      final currentEntry = _questionsMap[idx];
+                      _questionsMap[idx]={
+                          ...currentEntry!,
+                          "image":firstFile
+                      };
+                   });
+                }
+              } else {
+                print("No file selected");
+              }
+            }),
+          ): Text("Replace Image")
+        ],
+      ));
+      _steps.add(_currentStep);
+      _questionsMap[idx] = {};
+
+    }
+    setState(() {
+      steps = _steps;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    generateSteps();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+          padding: UIParameters.mobileScreenPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 15,
+              ),
+              Text("Let create the questions"),
+              Expanded(
+                child: Stepper(
+                  type: StepperType.vertical,
+                  currentStep: currentQuestion,
+                  steps: steps,
+                  onStepCancel: () {
+                    setState(() {
+                      if (currentQuestion > 0) {
+                        currentQuestion -= 1;
+                      } else {
+                        // Cancel button pressed on the first step
+                      }
+                    });
+                  },
+                  onStepContinue: () {
+                     setState(() {
+                        if (currentQuestion < steps.length - 1) {
+                          print(_questionsMap[0]);
+                          currentQuestion += 1;
+                        } else {
+                          // Finish button pressed
+                          // You can perform any final actions here
+                          /// Generate the Questions here as a model or continue to work with the maps in the dark
+                        }
+                      });
+                  },
+                  ),
+              )
+            ],
+          ),
+        );
   }
 }
