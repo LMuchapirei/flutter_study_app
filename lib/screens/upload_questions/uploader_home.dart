@@ -201,7 +201,7 @@ class QuestionEntryForm extends StatefulWidget {
 class _QuestionEntryFormState extends State<QuestionEntryForm> {
   List<Step> steps= [];
   int currentQuestion = 0;
-  Map<String,dynamic> questionsMap = {};
+  Map<int,dynamic> _questionsMap = {};
   void generateSteps(){
     List<Step> _steps = [];
     final questionCount = widget.questionHeaderData!.numberOfQuestions;
@@ -210,7 +210,13 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
         title: Text("Question ${idx + 1}"), 
         content: Column(
         children: [
-          CustomFormField(hintText: "Enter Question"),
+          CustomFormField(hintText: "Enter Question",onChange: (p0) {
+            setState(() {
+             _questionsMap[idx]={
+              "Question":p0
+            };
+            });
+          },),
           Center(
             child: MainButton(
               title: "Click Add Image",
@@ -221,7 +227,8 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
         ],
       ));
       _steps.add(_currentStep);
-      
+      _questionsMap[idx] = {};
+
     }
     setState(() {
       steps = _steps;
@@ -263,10 +270,12 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
                   onStepContinue: () {
                      setState(() {
                         if (currentQuestion < steps.length - 1) {
+                          print(_questionsMap);
                           currentQuestion += 1;
                         } else {
                           // Finish button pressed
                           // You can perform any final actions here
+                          /// Generate the Questions here as a model or continue to work with the maps in the dark
                         }
                       });
                   },
