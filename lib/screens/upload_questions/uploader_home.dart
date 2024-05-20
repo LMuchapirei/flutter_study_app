@@ -202,23 +202,27 @@ class QuestionEntryForm extends StatefulWidget {
 class _QuestionEntryFormState extends State<QuestionEntryForm> {
   List<Step> steps= [];
   int currentQuestion = 0;
-  Map<int,Map<String,dynamic>> _questionsMap = {};
+  final Map<int,Map<String,dynamic>> _questionsMap = {};
   void generateSteps(){
     List<Step> _steps = [];
     final questionCount = widget.questionHeaderData!.numberOfQuestions;
     for(var idx = 0; idx < questionCount!; idx++){
+      print("Current item ${_questionsMap[idx]}");
       final _currentStep = Step(
         title: Text("Question ${idx + 1}"), 
         content: Column(
         children: [
           CustomFormField(hintText: "Enter Question",onChange: (p0) {
             setState(() {
+              final currentEntry = _questionsMap[idx];
              _questionsMap[idx]={
+              ...currentEntry!,
               "Question":p0
             };
             });
           },),
-          
+          _questionsMap[idx] ==null || _questionsMap[idx]!["image"] == null
+          ?
           Center(
             child: MainButton(
               title: "Click Add Image",
@@ -245,7 +249,7 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
                 print("No file selected");
               }
             }),
-          )
+          ): Text("Replace Image")
         ],
       ));
       _steps.add(_currentStep);
@@ -292,7 +296,7 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
                   onStepContinue: () {
                      setState(() {
                         if (currentQuestion < steps.length - 1) {
-                          print(_questionsMap);
+                          print(_questionsMap[0]);
                           currentQuestion += 1;
                         } else {
                           // Finish button pressed
