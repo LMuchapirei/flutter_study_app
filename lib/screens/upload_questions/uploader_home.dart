@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
 import 'package:flutter_study_app/controllers/auth_controller.dart';
@@ -201,7 +202,7 @@ class QuestionEntryForm extends StatefulWidget {
 class _QuestionEntryFormState extends State<QuestionEntryForm> {
   List<Step> steps= [];
   int currentQuestion = 0;
-  Map<int,dynamic> _questionsMap = {};
+  Map<int,Map<String,dynamic>> _questionsMap = {};
   void generateSteps(){
     List<Step> _steps = [];
     final questionCount = widget.questionHeaderData!.numberOfQuestions;
@@ -217,11 +218,32 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
             };
             });
           },),
+          
           Center(
             child: MainButton(
               title: "Click Add Image",
-              onTap: (){
-
+              onTap: () async{
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['jpg','png']
+                );
+                if (result != null) {
+                List<File> files = result.paths.map((path) => File(path!)).toList();
+                //// Handle file uploading to firebase storage
+                final firstFile = files.first;
+                if(files.isNotEmpty){
+                   //// Handler to capture document uplaod
+                   setState(() {
+                      final currentEntry = _questionsMap[idx];
+                      _questionsMap[idx]={
+                          ...currentEntry!,
+                          "image":firstFile
+                      };
+                   });
+                }
+              } else {
+                print("No file selected");
+              }
             }),
           )
         ],
