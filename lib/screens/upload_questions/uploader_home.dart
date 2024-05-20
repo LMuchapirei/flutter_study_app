@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_study_app/configs/themes/app_colors.dart';
@@ -9,6 +11,7 @@ import 'package:get/get.dart';
 import '../../configs/themes/app_icons.dart';
 import '../../configs/themes/custom_text_styles.dart';
 import '../../configs/themes/ui_parameters.dart';
+import '../../controllers/questions_uploader/question_model.dart';
 import '../../controllers/questions_uploader/questions_uploader.dart';
 import '../../widgets/common/main_button.dart';
 
@@ -76,7 +79,7 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                   ),
                   child: GestureDetector(
                     onTap: () async {               
-                       final questionHeaderData =  await showModalBottomSheet(
+                        QuestionSubject? questionHeaderData =  await showModalBottomSheet(
                            context: context,
                            isDismissible: false,
                            backgroundColor:  customScaffoldColor(context),
@@ -149,6 +152,23 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                        /// We will be here unless there is an error
                        print(questionHeaderData);
                        /// Capture the questions and the images 
+                       if(questionHeaderData != null)
+                       showModalBottomSheet(
+                           context: context, 
+                           isDismissible: false,
+                           backgroundColor:  customScaffoldColor(context),
+                           isScrollControlled: true,
+                           shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(cardBorderRadius)),
+                           ),
+                          builder: (context){
+                              return Padding(
+                              padding:  EdgeInsets.only(
+                                // bottom:    
+                                //     MediaQuery.of(context).viewInsets.bottom                
+                              ),
+                              child: QuestionEntryForm(questionHeaderData: questionHeaderData));
+                          });
                     },
                     child: SvgPicture.asset(
                         "assets/images/addpdf.svg",
@@ -163,5 +183,97 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
          ),
       ),
     );
+  }
+}
+
+class QuestionEntryForm extends StatefulWidget {
+   QuestionEntryForm({
+    Key? key,
+    required this.questionHeaderData,
+  }) : super(key: key);
+
+  final QuestionSubject? questionHeaderData;
+
+  @override
+  State<QuestionEntryForm> createState() => _QuestionEntryFormState();
+}
+
+class _QuestionEntryFormState extends State<QuestionEntryForm> {
+  List<Step> steps= [];
+  int currentQuestion = 0;
+  Map<String,dynamic> questionsMap = {};
+  void generateSteps(){
+    List<Step> _steps = [];
+    final questionCount = widget.questionHeaderData!.numberOfQuestions;
+    for(var idx = 0; idx < questionCount!; idx++){
+      final _currentStep = Step(
+        title: Text("Question ${idx + 1}"), 
+        content: Column(
+        children: [
+          CustomFormField(hintText: "Enter Question"),
+          Center(
+            child: MainButton(
+              title: "Click Add Image",
+              onTap: (){
+
+            }),
+          )
+        ],
+      ));
+      _steps.add(_currentStep);
+      
+    }
+    setState(() {
+      steps = _steps;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    generateSteps();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+          padding: UIParameters.mobileScreenPadding,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 15,
+              ),
+              Text("Let create the questions"),
+              Expanded(
+                child: Stepper(
+                  type: StepperType.vertical,
+                  currentStep: currentQuestion,
+                  steps: steps,
+                  onStepCancel: () {
+                    setState(() {
+                      if (currentQuestion > 0) {
+                        currentQuestion -= 1;
+                      } else {
+                        // Cancel button pressed on the first step
+                      }
+                    });
+                  },
+                  onStepContinue: () {
+                     setState(() {
+                        if (currentQuestion < steps.length - 1) {
+                          currentQuestion += 1;
+                        } else {
+                          // Finish button pressed
+                          // You can perform any final actions here
+                        }
+                      });
+                  },
+                  ),
+              )
+            ],
+          ),
+        );
   }
 }
