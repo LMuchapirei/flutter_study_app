@@ -230,47 +230,6 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
               });
         },
         )
-      //   Column(
-      //   children: [
-      //     CustomFormField(hintText: "Enter Question",onChange: (p0) {
-      //       setState(() {
-      //         final currentEntry = _questionsMap[idx];
-      //        _questionsMap[idx]={
-      //         ...currentEntry!,
-      //         "Question":p0
-      //       };
-      //       });
-      //     },),
-      //     Center(
-      //       child: MainButton(
-      //         title: "Add Figure(Optional)",
-      //         onTap: () async{
-      //           FilePickerResult? result = await FilePicker.platform.pickFiles(
-      //             type: FileType.custom,
-      //             allowedExtensions: ['jpg','png']
-      //           );
-      //           if (result != null) {
-      //           List<File> files = result.paths.map((path) => File(path!)).toList();
-      //           //// Handle file uploading to firebase storage
-      //           final firstFile = files.first;
-      //           if(files.isNotEmpty){
-      //              //// Handler to capture document uplaod
-      //              setState(() {
-      //                 final currentEntry = _questionsMap[idx];
-      //                 _questionsMap[idx]={
-      //                     ...currentEntry!,
-      //                     "image":firstFile
-      //                 };
-      //              });
-      //           }
-      //         } else {
-      //           print("No file selected");
-      //         }
-      //       }),
-      //     ),
-      //     AnswerForm(answersCount: 4,),
-      //   ],
-      // )
       )
       ;
       _steps.add(_currentStep);
@@ -348,6 +307,28 @@ class ParentQuestion extends StatefulWidget {
 
 class _ParentQuestionState extends State<ParentQuestion> {
   File? currentFile;
+  List<AnswerModel> currentAnswers = [];
+  /// Refactor this to own file
+  void captureFile() async {
+   FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg','png']
+   );
+   if(result !=null){
+    List<File> files = result.paths.map((path)=>File(path!)).toList();
+    if(files.isNotEmpty){
+      final firstFile = files.first;
+      widget.onChangeFile(firstFile);
+      setState(() {
+        currentFile = firstFile;
+      });
+    } else {
+      /// show snackbar to say no file selected
+    }
+   }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -355,18 +336,28 @@ class _ParentQuestionState extends State<ParentQuestion> {
          CustomFormField(hintText: "Enter Question",onChange: widget.onChangeQuestionText,),
           currentFile !=null ?
           Container(
-                    height: 120.0,
-                    width: 120.0,
+            height: 120.0,
+            width: 120.0,
             child: Stack(
               children: [
                 Container(
                     height: 120.0,
                     width: 120.0,
-                    child: Image.file(currentFile!),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: ClipRRect(
+                       borderRadius: BorderRadius.circular(20),
+                      child: Image.file(currentFile!,)),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Icon(Icons.edit,color: Colors.blue,))
+                InkWell(
+                  onTap: () {
+                    captureFile();
+                  },
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Icon(Icons.edit,color: Colors.blue,)),
+                )
               ],
             ),
           )
@@ -375,33 +366,22 @@ class _ParentQuestionState extends State<ParentQuestion> {
             child: MainButton(
               title: "Add Figure(Optional)",
               onTap: () async{
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['jpg','png']
-                );
-                if (result != null) {
-                List<File> files = result.paths.map((path) => File(path!)).toList();
-                //// Handle file uploading to firebase storage
-                final firstFile = files.first;
-                if(files.isNotEmpty){
-                    widget.onChangeFile(firstFile);
-                    setState(() {
-                      currentFile = firstFile;
-                    });
-                }
-              } else {
-                print("No file selected");
-              }
-            }),
+               captureFile();
+              }),
           ),
-          AnswerForm(answersCount: 4,),
+          AnswerForm(answersCount: 4, saveAnswer: (p0) {
+            setState(() {
+              currentAnswers = p0;
+            });
+          },),
       ],
     );
   }
 }
 class AnswerForm extends StatefulWidget {
   final int answersCount;
-  const AnswerForm({Key? key,required this.answersCount}) : super(key: key);
+  final Function(List<AnswerModel>) saveAnswer;
+  const AnswerForm({Key? key,required this.answersCount,required this.saveAnswer}) : super(key: key);
 
   @override
   State<AnswerForm> createState() => _AnswerFormState();
@@ -410,6 +390,10 @@ class AnswerForm extends StatefulWidget {
 class _AnswerFormState extends State<AnswerForm> {
 
   Map<int,String> countToChar = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F'};
+  Map<int,File> answerToImage = {};
+  Map<int,String> answerToText={};
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -420,24 +404,72 @@ class _AnswerFormState extends State<AnswerForm> {
     );
   }
 
+   void captureAnswerFile(int answerKey) async {
+   FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg','png']
+   );
+   if(result !=null){
+    List<File> files = result.paths.map((path)=>File(path!)).toList();
+    if(files.isNotEmpty){
+      final firstFile = files.first;
+      setState(() {
+       answerToImage[answerKey] = firstFile;
+      });
+    } else {
+      /// show snackbar to say no file selected
+    }
+   }
+  }
+
   Widget buildForm(int count){
     return Column(
       children: [
-        CustomFormField(hintText: "Enter answer ${countToChar[count]}"),
+        CustomFormField(hintText: "Enter answer ${countToChar[count]}",
+        onChange: (text) {
+          setState(() {
+            answerToText[count] = text!;
+          });
+        },),
         Row(
           children: [
             Text("Upload Supporting Figure(Optional)"),
-            Icon(
-              Icons.add_a_photo,
-              size: 14,
-              color: Colors.blue,),
+            InkWell(
+              onTap: () {
+                captureAnswerFile(count);
+              },
+              child: Icon(
+                Icons.add_a_photo,
+                size: 14,
+                color: Colors.blue,),
+            ),
           ],
         ),
         SizedBox(
           height: 8,
         ),
+        Center(
+            child: MainButton(
+              title: "Add Figure(Optional)",
+              onTap: () async{
+                 generateAnswerModel();
+              }),
+          ),
       ],
     );
+  }
+
+  void generateAnswerModel(){
+    List<AnswerModel> tempAnswers = [];
+    for (var key in countToChar.keys){
+      final identifier = countToChar[key];
+      final answer = answerToText[key];
+      final image = answerToImage[key];
+      final answerObj = AnswerModel(answer: answer,identifier: identifier,image: image);
+      tempAnswers.add(answerObj);
+    }
+    
+
   }
 
 }

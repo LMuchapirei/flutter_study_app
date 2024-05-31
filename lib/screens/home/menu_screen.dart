@@ -18,7 +18,7 @@ class MenuScreen extends GetView<MyZoomDrawerController> {
       child: Theme(
         data: ThemeData(
             textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(primary: onSurfaceTextColor))),
+                style: TextButton.styleFrom(foregroundColor: onSurfaceTextColor))),
         child: SafeArea(
           child: Stack(
             children: [
