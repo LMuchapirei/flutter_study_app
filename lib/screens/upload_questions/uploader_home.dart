@@ -119,7 +119,6 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                   requiresPadding: false,
                                                   validator: _questionsUploadController.validateSubject,
                                                   onSaved: _questionsUploadController.saveSubject,
-
                                                   ),
                                                 CustomFormField(
                                                   hintText: "Number of Questions",
@@ -127,9 +126,13 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                   textInputType:  TextInputType.number,
                                                   validator: _questionsUploadController.validateNumberOfQuestions,
                                                   onSaved: _questionsUploadController.saveNumberOfQuestions,
-
                                                   ),
-                                      
+                                                CustomFormField(
+                                                  hintText: "Description",
+                                                  requiresPadding: false,
+                                                  validator: _questionsUploadController.validateDescription,
+                                                  onSaved: _questionsUploadController.saveDescription,
+                                                ),      
                                               Padding(
                                                 padding:UIParameters.mobileScreenPadding,
                                                 child: MainButton(
@@ -203,55 +206,42 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
   List<Step> steps= [];
   int currentQuestion = 0;
   final Map<int,Map<String,dynamic>> _questionsMap = {};
+  final Map<int,List<AnswerModel>> _answersMap = {};
   void generateSteps(){
     List<Step> _steps = [];
     final questionCount = widget.questionHeaderData!.numberOfQuestions;
     for(var idx = 0; idx < questionCount!; idx++){
-      print("Current item ${_questionsMap[idx]}");
       final _currentStep = Step(
         title: Text("Question ${idx + 1}"), 
-        content: Column(
-        children: [
-          CustomFormField(hintText: "Enter Question",onChange: (p0) {
-            setState(() {
+        content: ParentQuestion(
+          currentMapValue:_questionsMap[idx] ?? {},
+          onChangeQuestionText: (p0) {
+              setState(() {
               final currentEntry = _questionsMap[idx];
              _questionsMap[idx]={
               ...currentEntry!,
               "Question":p0
             };
             });
-          },),
-          _questionsMap[idx] ==null || _questionsMap[idx]!["image"] == null
-          ?
-          Center(
-            child: MainButton(
-              title: "Click Add Image",
-              onTap: () async{
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['jpg','png']
-                );
-                if (result != null) {
-                List<File> files = result.paths.map((path) => File(path!)).toList();
-                //// Handle file uploading to firebase storage
-                final firstFile = files.first;
-                if(files.isNotEmpty){
-                   //// Handler to capture document uplaod
-                   setState(() {
-                      final currentEntry = _questionsMap[idx];
-                      _questionsMap[idx]={
-                          ...currentEntry!,
-                          "image":firstFile
-                      };
-                   });
-                }
-              } else {
-                print("No file selected");
-              }
-            }),
-          ): Text("Replace Image")
-        ],
-      ));
+        },
+        onChangeFile: (file){
+                setState(() {
+          final currentEntry = _questionsMap[idx];
+          _questionsMap[idx]={
+              ...currentEntry!,
+              "image":file
+                    };
+              });
+        },
+        saveAnswers:(answers){
+          setState(() {
+           _answersMap[idx] = answers;
+          });
+          print("Current Answers Map $_answersMap");
+        }
+        )
+      )
+      ;
       _steps.add(_currentStep);
       _questionsMap[idx] = {};
 
@@ -311,4 +301,218 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
           ),
         );
   }
+}
+
+//// Maintain the state of each widget
+// ignore: must_be_immutable
+class ParentQuestion extends StatefulWidget {
+  Function(String?)? onChangeQuestionText;
+  Function(File) onChangeFile;
+  Function(List<AnswerModel>) saveAnswers;
+  Map<String,dynamic> currentMapValue;
+  ParentQuestion({Key? key,required this.onChangeQuestionText,required this.onChangeFile,required this.currentMapValue,required this.saveAnswers}) : super(key: key);
+
+  @override
+  State<ParentQuestion> createState() => _ParentQuestionState();
+}
+
+class _ParentQuestionState extends State<ParentQuestion> {
+  File? currentFile;
+  List<AnswerModel> currentAnswers = [];
+  /// Refactor this to own file
+  void captureFile() async {
+   FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg','png']
+   );
+   if(result !=null){
+    List<File> files = result.paths.map((path)=>File(path!)).toList();
+    if(files.isNotEmpty){
+      final firstFile = files.first;
+      widget.onChangeFile(firstFile);
+      setState(() {
+        currentFile = firstFile;
+      });
+    } else {
+      /// show snackbar to say no file selected
+    }
+   }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+         CustomFormField(hintText: "Enter Question",onChange: widget.onChangeQuestionText,),
+          currentFile !=null ?
+          Container(
+            height: 120.0,
+            width: 120.0,
+            child: Stack(
+              children: [
+                Container(
+                    height: 120.0,
+                    width: 120.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: ClipRRect(
+                       borderRadius: BorderRadius.circular(20),
+                      child: Image.file(currentFile!,)),
+                ),
+                InkWell(
+                  onTap: () {
+                    captureFile();
+                  },
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Icon(Icons.edit,color: Colors.blue,)),
+                )
+              ],
+            ),
+          )
+          :
+          Center(
+            child: MainButton(
+              title: "Add Figure(Optional)",
+              onTap: () async{
+               captureFile();
+              }),
+          ),
+          AnswerForm(answersCount: 4, saveAnswer: (p0) {
+            setState(() {
+              currentAnswers = p0;
+            });
+            widget.saveAnswers(p0);
+          },),
+      ],
+    );
+  }
+}
+class AnswerForm extends StatefulWidget {
+  final int answersCount;
+  final Function(List<AnswerModel>) saveAnswer;
+  const AnswerForm({Key? key,required this.answersCount,required this.saveAnswer}) : super(key: key);
+
+  @override
+  State<AnswerForm> createState() => _AnswerFormState();
+}
+
+class _AnswerFormState extends State<AnswerForm> {
+
+  Map<int,String> countToChar = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F'};
+  Map<int,File> answerToImage = {};
+  Map<int,String> answerToText={};
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for(var idx=0;idx<widget.answersCount;idx++)
+          buildForm(idx),
+        SizedBox(
+          height: 10,
+        ),
+          Center(
+            child: MainButton(
+              title: "Save Answers",
+              onTap: () async{
+                 generateAnswerModel();
+              }),
+          ),
+      ],
+    );
+  }
+
+   void captureAnswerFile(int answerKey) async {
+   FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg','png']
+   );
+   if(result !=null){
+    List<File> files = result.paths.map((path)=>File(path!)).toList();
+    if(files.isNotEmpty){
+      final firstFile = files.first;
+      setState(() {
+       answerToImage[answerKey] = firstFile;
+      });
+    } else {
+      /// show snackbar to say no file selected
+    }
+   }
+  }
+
+  Widget buildForm(int count){
+    return Column(
+      children: [
+        CustomFormField(hintText: "Enter answer ${countToChar[count]}",
+        onChange: (text) {
+          setState(() {
+            answerToText[count] = text!;
+          });
+        },),
+
+        answerToImage[count] != null ?
+          Row(
+          children: [
+            InkWell(
+              child: Text("Preview Image")),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    captureAnswerFile(count);
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    size: 14,
+                    color: Colors.blue,),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      answerToImage.remove(count);    
+                    });
+                  },
+                  child: Icon(Icons.delete,color: Colors.red,))
+              ],
+            ),
+          ],
+        )
+        :
+        Row(
+          children: [
+            Text("Upload Supporting Figure(Optional)"),
+            InkWell(
+              onTap: () {
+                captureAnswerFile(count);
+              },
+              child: Icon(
+                Icons.add_a_photo,
+                size: 14,
+                color: Colors.blue,),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 8,
+        ),
+      ],
+    );
+  }
+
+  void generateAnswerModel(){
+    List<AnswerModel> tempAnswers = [];
+    for (var key in countToChar.keys){
+      final identifier = countToChar[key];
+      final answer = answerToText[key];
+      final image = answerToImage[key];
+      final answerObj = AnswerModel(answer: answer,identifier: identifier,image: image);
+      tempAnswers.add(answerObj);
+    }
+    widget.saveAnswer(tempAnswers);
+  }
+
 }

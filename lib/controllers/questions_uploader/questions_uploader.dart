@@ -33,9 +33,16 @@ class QuestionsUploaderController extends GetxController{
       return null;
     }
 
+     String? validateDescription(String? description){
+      if(description!.isEmpty){
+        return "Please enter valid description";
+      }
+      return null;
+    }
+
     void saveSubject(String? subject) =>  questionBankHeader["subject"] = subject;
     void saveNumberOfQuestions(String? numberOfQuestions) =>  questionBankHeader["numberOfQuestions"] = int.tryParse(numberOfQuestions!);
-
+    void saveDescription(String? description)=> questionBankHeader["description"] = description;
 
     String? validateNumberOfQuestions(String? questionsCount){
         if(questionsCount!.isEmpty){
