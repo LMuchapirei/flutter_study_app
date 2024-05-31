@@ -4,28 +4,32 @@ import 'dart:io';
 
 class QuestionSubject {
    String? subject;
+   String? description;
    int? numberOfQuestions;
 
    QuestionSubject({
      this.numberOfQuestions,
+     this.description,
      this.subject});
 
 
   QuestionSubject.fromJson(Map<String,dynamic> json){
     numberOfQuestions = json["numberOfQuestions"];
     subject = json["subject"];
+    description = json["description"];
   }
 
   Map<String,dynamic> toJson(){
     final Map<String,dynamic> data = {};
     data["subject"] = subject;
     data["numberOfQuestions"] = numberOfQuestions;
-    return data;
+    data["description"] = description;
+     return data;
   }
 
   @override
   String toString() {
-    return { "subject":subject, "numberOfQuestions":numberOfQuestions}.toString();
+    return { "subject":subject, "numberOfQuestions":numberOfQuestions,"description":description}.toString();
   }
 }
 
@@ -83,7 +87,7 @@ class AnswerModel {
 
   @override
   String toString() {
-    return { "answer":answer,"identifier":identifier }.toString();
+    return { "answer":answer,"identifier":identifier,"image":image}.toString();
   }
 }
 
