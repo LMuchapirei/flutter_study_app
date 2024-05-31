@@ -373,6 +373,7 @@ class _ParentQuestionState extends State<ParentQuestion> {
             setState(() {
               currentAnswers = p0;
             });
+            print("Current answers $currentAnswers");
           },),
       ],
     );
@@ -399,7 +400,17 @@ class _AnswerFormState extends State<AnswerForm> {
     return Column(
       children: [
         for(var idx=0;idx<widget.answersCount;idx++)
-          buildForm(idx)
+          buildForm(idx),
+        SizedBox(
+          height: 10,
+        ),
+          Center(
+            child: MainButton(
+              title: "Save Answers",
+              onTap: () async{
+                 generateAnswerModel();
+              }),
+          ),
       ],
     );
   }
@@ -431,6 +442,35 @@ class _AnswerFormState extends State<AnswerForm> {
             answerToText[count] = text!;
           });
         },),
+
+        answerToImage[count] != null ?
+          Row(
+          children: [
+            InkWell(
+              child: Text("Preview Image")),
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    captureAnswerFile(count);
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    size: 14,
+                    color: Colors.blue,),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      answerToImage.remove(count);    
+                    });
+                  },
+                  child: Icon(Icons.delete,color: Colors.red,))
+              ],
+            ),
+          ],
+        )
+        :
         Row(
           children: [
             Text("Upload Supporting Figure(Optional)"),
@@ -448,13 +488,6 @@ class _AnswerFormState extends State<AnswerForm> {
         SizedBox(
           height: 8,
         ),
-        Center(
-            child: MainButton(
-              title: "Add Figure(Optional)",
-              onTap: () async{
-                 generateAnswerModel();
-              }),
-          ),
       ],
     );
   }
@@ -468,8 +501,7 @@ class _AnswerFormState extends State<AnswerForm> {
       final answerObj = AnswerModel(answer: answer,identifier: identifier,image: image);
       tempAnswers.add(answerObj);
     }
-    
-
+    widget.saveAnswer(tempAnswers);
   }
 
 }
