@@ -119,7 +119,6 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                   requiresPadding: false,
                                                   validator: _questionsUploadController.validateSubject,
                                                   onSaved: _questionsUploadController.saveSubject,
-
                                                   ),
                                                 CustomFormField(
                                                   hintText: "Number of Questions",
@@ -127,9 +126,13 @@ class QuestionsUploadHome extends GetView<QuestionsUploaderController> {
                                                   textInputType:  TextInputType.number,
                                                   validator: _questionsUploadController.validateNumberOfQuestions,
                                                   onSaved: _questionsUploadController.saveNumberOfQuestions,
-
                                                   ),
-                                      
+                                                CustomFormField(
+                                                  hintText: "Description",
+                                                  requiresPadding: false,
+                                                  validator: _questionsUploadController.validateDescription,
+                                                  onSaved: _questionsUploadController.saveDescription,
+                                                ),      
                                               Padding(
                                                 padding:UIParameters.mobileScreenPadding,
                                                 child: MainButton(
@@ -203,6 +206,7 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
   List<Step> steps= [];
   int currentQuestion = 0;
   final Map<int,Map<String,dynamic>> _questionsMap = {};
+  final Map<int,List<AnswerModel>> _answersMap = {};
   void generateSteps(){
     List<Step> _steps = [];
     final questionCount = widget.questionHeaderData!.numberOfQuestions;
@@ -221,14 +225,20 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
             });
         },
         onChangeFile: (file){
-                            setState(() {
-                      final currentEntry = _questionsMap[idx];
-                      _questionsMap[idx]={
-                          ...currentEntry!,
-                         "image":file
+                setState(() {
+          final currentEntry = _questionsMap[idx];
+          _questionsMap[idx]={
+              ...currentEntry!,
+              "image":file
                     };
               });
         },
+        saveAnswers:(answers){
+          setState(() {
+           _answersMap[idx] = answers;
+          });
+          print("Current Answers Map $_answersMap");
+        }
         )
       )
       ;
@@ -298,8 +308,9 @@ class _QuestionEntryFormState extends State<QuestionEntryForm> {
 class ParentQuestion extends StatefulWidget {
   Function(String?)? onChangeQuestionText;
   Function(File) onChangeFile;
+  Function(List<AnswerModel>) saveAnswers;
   Map<String,dynamic> currentMapValue;
-  ParentQuestion({Key? key,required this.onChangeQuestionText,required this.onChangeFile,required this.currentMapValue}) : super(key: key);
+  ParentQuestion({Key? key,required this.onChangeQuestionText,required this.onChangeFile,required this.currentMapValue,required this.saveAnswers}) : super(key: key);
 
   @override
   State<ParentQuestion> createState() => _ParentQuestionState();
@@ -373,7 +384,7 @@ class _ParentQuestionState extends State<ParentQuestion> {
             setState(() {
               currentAnswers = p0;
             });
-            print("Current answers $currentAnswers");
+            widget.saveAnswers(p0);
           },),
       ],
     );
